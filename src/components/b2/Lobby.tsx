@@ -7,7 +7,7 @@ import { restroomSignTex, terrazzoTex } from '../../textures/lobby'
 import { b2FloorSignTex, b2WayfindingTex, iitsPosterTex, exitTex } from '../../textures/b2'
 import { Box, Collider, Panel } from '../props/primitives'
 import { Elevator } from '../Elevator'
-import { AgreementPage, BlendenHallPainting } from '../WallArt'
+import { AgreementPage, OlivaWreckPhoto } from '../WallArt'
 
 const { lobby, doors, grand } = B2
 const W = lobby.x1 - lobby.x0
@@ -331,7 +331,7 @@ export function Lobby() {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[LIFT_CX, 8.005, 28]} material={stripFloor}>
         <planeGeometry args={[MEZZ.strip.x1 - MEZZ.strip.x0, 4]} />
       </mesh>
-      {/* the bridge: the width of both pairs of doors it serves, and two columns under it flanking the Blenden Hall */}
+      {/* the bridge: the width of both pairs of doors it serves, and two columns under it flanking the Oliva */}
       <Box size={[MEZZ.bridge.x1 - MEZZ.bridge.x0, 0.4, 7.65]} material={slab} position={[LIFT_CX, 7.8, 22.175]} cast={false} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[LIFT_CX, 8.005, 22.175]} material={bridgeFloor}>
         <planeGeometry args={[MEZZ.bridge.x1 - MEZZ.bridge.x0, 7.65]} />
@@ -429,8 +429,8 @@ export function Lobby() {
 
       {/* the sign hangs from the bridge now, where you walk under it coming off the lift */}
       <Panel size={[4.4, 1.1]} material={wayfinding} position={[MID_X, 7.0, 24.5]} />
-      {/* and under it the Blenden Hall, framed, with its story on the plate */}
-      <BlendenHallPainting position={[MID_X, 5.2, lobby.z0 + 0.38]} />
+      {/* and under it the Oliva, framed, with its story on the plate */}
+      <OlivaWreckPhoto position={[MID_X, 5.2, lobby.z0 + 0.38]} />
       {/* and over it, on the mezzanine, between the two pairs of doors onto the balcony */}
       <AgreementPage position={[MID_X, MEZZ.y + 5.6, lobby.z0 + 0.38]} />
 

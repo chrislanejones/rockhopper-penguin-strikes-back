@@ -4,7 +4,7 @@ import { canvasTex } from '../lib/canvasTex'
  * The paper part of the wall calendar: month grid, caption and spiral holes.
  *
  * The photograph itself is a separate plane laid over the top half, so the
- * painted Parliament House can sit there at full resolution instead of being
+ * albatross photograph can sit there at full resolution instead of being
  * redrawn into this canvas.
  */
 export const calendarPaperTex = () =>
@@ -19,10 +19,10 @@ export const calendarPaperTex = () =>
     g.fillStyle = '#1a2a44'
     g.font = 'bold 12px sans-serif'
     g.textAlign = 'left'
-    g.fillText('PARLIAMENT HOUSE · LONDON', 16, 232)
+    g.fillText('ATLANTIC YELLOW-NOSED ALBATROSS', 16, 232)
     g.fillStyle = '#666'
     g.font = '10px sans-serif'
-    g.fillText('Built from the island’s own stone, 1938', 16, 246)
+    g.fillText('Thalassarche chlororhynchos · Tristan beyond', 16, 246)
 
     /*
       September 2026. The 1st falls on a Tuesday, so day d sits at grid slot

@@ -3,9 +3,11 @@ import { canvasTex, lazy } from '../lib/canvasTex'
 /*
   The Parliament of Inaccessible Island: the agency that keeps the island and
   what grows on it. Inaccessible is the uninhabited one in the Tristan da Cunha
-  group, a plateau on cliffs with one waterfall down the north face. Denstone
-  Hall and the Rockhopper Building in London are made up; the island,
-  its birds and the wreck of the Blenden Hall are not.
+  group, a plateau on cliffs with one waterfall down the north face. It is
+  part of a British Overseas Territory with no buildings on it, and nothing on
+  Tristan is taller than a house, so the Parliament's tower is in London.
+  Denstone Hall and the Rockhopper Building are made up; the island,
+  its birds and the wreck of the MS Oliva are not.
 
   Everything here is painted, not photographed, so none of it is anyone
   else's artwork.
@@ -154,110 +156,6 @@ export const iitsBannerTex = lazy(() =>
     g.fillStyle = '#c7d3ee'
     g.font = '22px sans-serif'
     g.fillText('Inaccessible Island Technology Symposium', 228, 190)
-  }),
-)
-
-/** Photo on the wall calendar: Parliament House, London, in summer. */
-export const parliamentHouseTex = lazy(() =>
-  canvasTex(552, 400, (g, w, h) => {
-    const sky = g.createLinearGradient(0, 0, 0, h * 0.7)
-    sky.addColorStop(0, '#5f97cf')
-    sky.addColorStop(1, '#cfe2f1')
-    g.fillStyle = sky
-    g.fillRect(0, 0, w, h)
-    // the island behind the town
-    plateau(g, -40, h * 0.62, w * 0.7, h * 0.34, '#6f8f79')
-    // lawn
-    g.fillStyle = '#4f8a3c'
-    g.fillRect(0, h * 0.72, w, h)
-    g.fillStyle = '#d9d2c1'
-    g.beginPath()
-    g.moveTo(w / 2 - 30, h * 0.74)
-    g.lineTo(w / 2 + 30, h * 0.74)
-    g.lineTo(w / 2 + 110, h)
-    g.lineTo(w / 2 - 110, h)
-    g.fill()
-    // the house: plinth, columns, pediment
-    const x0 = w * 0.2
-    const x1 = w * 0.8
-    const top = h * 0.4
-    g.fillStyle = '#f1ede4'
-    g.fillRect(x0, top, x1 - x0, h * 0.34)
-    g.fillStyle = '#d8d2c4'
-    g.fillRect(x0 - 10, h * 0.7, x1 - x0 + 20, 14)
-    g.fillStyle = '#ffffff'
-    for (let i = 0; i < 6; i++) {
-      const cx = x0 + 24 + i * ((x1 - x0 - 48) / 5)
-      g.fillRect(cx - 8, top + 28, 16, h * 0.27)
-    }
-    g.fillStyle = '#e6e0d3'
-    g.beginPath()
-    g.moveTo(x0 - 14, top + 4)
-    g.lineTo(w / 2, top - 58)
-    g.lineTo(x1 + 14, top + 4)
-    g.fill()
-    g.fillStyle = '#e1dacb'
-    g.fillRect(x0 - 14, top, x1 - x0 + 28, 26)
-    // flag on the roof
-    g.fillStyle = '#555'
-    g.fillRect(w / 2 - 1, top - 110, 3, 54)
-    g.fillStyle = NAVY
-    g.fillRect(w / 2 + 2, top - 110, 40, 24)
-  }),
-)
-
-/** The Blenden Hall on the rocks, a painting after the survivors' account. 706 x 600. */
-export const blendenHallTex = lazy(() =>
-  canvasTex(706, 600, (g, w, h) => {
-    const sky = g.createLinearGradient(0, 0, 0, h * 0.6)
-    sky.addColorStop(0, '#39424d')
-    sky.addColorStop(1, '#9aa2a0')
-    g.fillStyle = sky
-    g.fillRect(0, 0, w, h)
-    // the cliffs, right
-    plateau(g, w * 0.5, h * 0.7, w * 0.62, h * 0.52, '#3b3a33')
-    // sea
-    g.fillStyle = '#2f4a52'
-    g.fillRect(0, h * 0.62, w, h)
-    g.strokeStyle = 'rgba(230,236,232,.6)'
-    g.lineWidth = 3
-    for (let k = 0; k < 9; k++) {
-      g.beginPath()
-      for (let x = 0; x <= w; x += 10) {
-        const y = h * 0.66 + k * 24 + Math.sin(x / 30 + k * 1.7) * 6
-        if (x === 0) g.moveTo(x, y)
-        else g.lineTo(x, y)
-      }
-      g.stroke()
-    }
-    // the ship, heeled over on the reef
-    g.save()
-    g.translate(w * 0.36, h * 0.66)
-    g.rotate(-0.22)
-    g.fillStyle = '#20180f'
-    g.beginPath()
-    g.moveTo(-150, 0)
-    g.lineTo(150, 0)
-    g.lineTo(120, 40)
-    g.lineTo(-130, 40)
-    g.fill()
-    g.fillStyle = '#20180f'
-    for (const mx of [-90, 0, 90]) g.fillRect(mx - 4, -200, 8, 200)
-    g.fillStyle = 'rgba(214,206,186,.85)'
-    for (const mx of [-90, 0, 90]) {
-      g.fillRect(mx - 48, -180, 96, 36)
-      g.fillRect(mx - 40, -130, 80, 30)
-    }
-    g.restore()
-    // spray where the sea meets the hull
-    g.fillStyle = 'rgba(240,244,240,.7)'
-    for (let i = 0; i < 40; i++) {
-      g.beginPath()
-      g.arc(w * 0.2 + Math.random() * w * 0.34, h * 0.64 + Math.random() * 40, 3 + Math.random() * 8, 0, 7)
-      g.fill()
-    }
-    g.fillStyle = 'rgba(90,70,30,.14)'
-    g.fillRect(0, 0, w, h)
   }),
 )
 

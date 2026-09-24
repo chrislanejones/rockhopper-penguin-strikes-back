@@ -4,9 +4,9 @@ import * as THREE from 'three'
 import { M, mat } from '../scene/materials'
 import { BZ, CLO, CR, HALF, PH, RX0, SOUTH_WALL, V } from '../scene/constants'
 import { calendarPaperTex, gatekeeperPlateTex, iitsPosterTex } from '../textures/calendar'
-import { agreementPlateTex, blendenPlateTex } from '../textures/b2'
+import { agreementPlateTex, olivaPlateTex } from '../textures/b2'
 import {
-  blendenHallTex, iitsBannerTex, parliamentHouseTex, steamerPosterTex,
+  iitsBannerTex, steamerPosterTex,
 } from '../textures/island'
 import { buildingPlaqueTex } from '../textures/signage'
 import { Panel } from './props/primitives'
@@ -14,18 +14,20 @@ import { Panel } from './props/primitives'
 /**
  * Wall calendar on the break-room wall by the fridge.
  *
- * The photograph is Parliament House, London, laid over the paper as
- * its own plane so it keeps its full resolution and its own aspect.
+ * The picture is a tile mosaic of an Atlantic yellow-nosed albatross on the
+ * island, with Tristan's peak across the water, laid over the paper as its own plane so it keeps its full resolution and its own aspect.
  */
 export function Calendar() {
-  const house = parliamentHouseTex()
+  const photoTex = useTexture('/textures/albatross.webp')
+  photoTex.colorSpace = THREE.SRGBColorSpace
+  photoTex.anisotropy = 8
   const paper = useMemo(
     () => new THREE.MeshStandardMaterial({ map: calendarPaperTex(), roughness: 0.8 }),
     [],
   )
   const photo = useMemo(
-    () => new THREE.MeshStandardMaterial({ map: house, roughness: 0.55 }),
-    [house],
+    () => new THREE.MeshStandardMaterial({ map: photoTex, roughness: 0.55 }),
+    [photoTex],
   )
 
   const x = RX0 + 0.03
@@ -260,20 +262,22 @@ export function GatekeeperPortrait({
 }
 
 /**
- * The Blenden Hall on the rocks, framed like the Gatekeeper.
+ * The MS Oliva on the rocks at Nightingale, framed like the Gatekeeper.
  *
- * A painting of the 1821 wreck, the ship heeled over under the cliffs, with an
- * engraved brass plate under the frame telling anyone waiting for dinner how
- * the island got its first people.
+ * A tile mosaic after David E. Guggenheim's 2011 photograph of the wreck,
+ * with an engraved brass plate under the frame telling anyone waiting for
+ * dinner what the spill did to the penguins.
  */
-export function BlendenHallPainting({
+export function OlivaWreckPhoto({
   position,
   rotation,
 }: {
   position: [number, number, number]
   rotation?: [number, number, number]
 }) {
-  const photo = blendenHallTex()
+  const photo = useTexture('/textures/oliva-wreck.webp')
+  photo.colorSpace = THREE.SRGBColorSpace
+  photo.anisotropy = 8
   const photoMat = useMemo(
     () => new THREE.MeshStandardMaterial({ map: photo, roughness: 0.6 }),
     [photo],
@@ -281,7 +285,7 @@ export function BlendenHallPainting({
   const plateMat = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        map: blendenPlateTex(),
+        map: olivaPlateTex(),
         roughness: 0.35,
         metalness: 0.6,
       }),
@@ -292,8 +296,8 @@ export function BlendenHallPainting({
   const backing = useMemo(() => M(0x2a2118, { roughness: 0.9 }), [])
 
   const picW = 3.4
-  // The painting is 706 x 600.
-  const picH = picW * (600 / 706)
+  // oliva-wreck.webp is 720 x 480.
+  const picH = picW * (480 / 720)
 
   // Same stacked depths as the Gatekeeper's frame; the plate hangs clear below.
   return (
@@ -320,7 +324,7 @@ export function BlendenHallPainting({
 /**
  * The 1817 agreement: the handwritten page William Glass and the first
  * settlers of Tristan da Cunha signed to share everything equally. Framed like
- * the Blenden Hall and hung over it on the mezzanine, between the two pairs
+ * the Oliva and hung over it on the mezzanine, between the two pairs
  * of doors onto the balcony. The plate says what it is.
  */
 export function AgreementPage({

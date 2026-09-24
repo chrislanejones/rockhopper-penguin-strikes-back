@@ -131,10 +131,10 @@ export const liftStickerTex = lazy(() =>
 )
 
 /**
- * Engraved brass plate under the Blenden Hall painting, in the same hand as
- * the one under the Gatekeeper.
+ * Engraved brass plate under the Oliva photograph, in the same hand as the
+ * one under the Gatekeeper.
  */
-export const blendenPlateTex = lazy(() =>
+export const olivaPlateTex = lazy(() =>
   canvasTex(460, 220, (g, w, h) => {
     g.fillStyle = '#b08d3c'
     g.fillRect(0, 0, w, h)
@@ -150,15 +150,15 @@ export const blendenPlateTex = lazy(() =>
     g.fillStyle = '#3a2a10'
     g.textAlign = 'center'
     g.font = 'bold 30px Georgia, serif'
-    g.fillText('THE BLENDEN HALL', w / 2, 48)
+    g.fillText('THE MS OLIVA', w / 2, 48)
     g.font = 'italic 20px Georgia, serif'
-    g.fillText('“Lost on the north shore”', w / 2, 80)
+    g.fillText('“Aground on Nightingale”', w / 2, 80)
     g.font = '16px Georgia, serif'
-    g.fillText('East Indiaman · London to Bombay · wrecked July 1821', w / 2, 110)
+    g.fillText('Bulk carrier · Nightingale Island · 16 March 2011', w / 2, 110)
     g.font = '14px Georgia, serif'
-    g.fillText('Her people lived here four months on penguin eggs', w / 2, 144)
-    g.fillText('and wild celery, then built boats out of the wreck', w / 2, 164)
-    g.fillText('and made Tristan. The first to stay the winter.', w / 2, 184)
+    g.fillText('She broke up on the rocks and her fuel oil went into the sea.', w / 2, 144)
+    g.fillText('Thousands of rockhoppers were oiled. Tristan washed them by hand.', w / 2, 164)
+    g.fillText('Mosaic after a 2011 photograph by David E. Guggenheim', w / 2, 184)
   }),
 )
 
@@ -553,7 +553,7 @@ export const lowerThirdTex = lazy(() =>
 
 /**
  * Engraved brass plate under the 1817 agreement on the mezzanine, in the
- * same hand as the Blenden Hall's below it.
+ * same hand as the Oliva's below it.
  */
 export const agreementPlateTex = lazy(() =>
   canvasTex(460, 220, (g, w, h) => {

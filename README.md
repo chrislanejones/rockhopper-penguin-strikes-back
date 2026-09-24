@@ -4,6 +4,8 @@
 
 A walkable 23rd floor of the Rockhopper Building, 1821 Waterfall Road, London — the London offices of the Parliament of Inaccessible Island. Built with **React Three Fiber**, **React 19** and **TypeScript** on Vite.
 
+Why London: Inaccessible Island is part of a British Overseas Territory and has no buildings on it at all, and nothing on Tristan da Cunha is taller than a house. A 23-floor office has to be somewhere else.
+
 You walk around an office. There are eight desks with other people's things on them, a break room with a staff-update deck on one TV and the weather on the other, a storage room with a skeleton in it, and a lift lobby where the button does nothing. Out the window is London from 250 feet up, with traffic on the streets below.
 
 It started as a single 300 KB HTML file running three.js r128 from a CDN. This is that scene rebuilt as a project.
@@ -139,16 +141,20 @@ ignores both, so the whole of her is on the carpet whatever you can see.
 
 ## Images
 
-Six image files in `public/textures/`. Everything else in the scene is drawn with the 2D canvas API at load time — ceiling tiles, monitor screens, book spines, box labels, the flag, the paintings in the lobbies. It keeps the download small and the labels legible.
+Eight image files in `public/textures/`. Everything else in the scene is drawn with the 2D canvas API at load time — ceiling tiles, monitor screens, book spines, box labels, the flag, the paintings in the lobbies. It keeps the download small and the labels legible.
 
 | Asset | Source | WebP | Change | Where |
 | --- | --- | --- | --- | --- |
 | gatekeeper | 709,723 | 49,622 | −93% | Framed in the lift lobby: You Shall Not Pass |
+| albatross | 1,759,438 | 24,898 | −99% | Tile mosaic on the break-room wall calendar |
+| oliva-wreck | 784,750 | 22,666 | −97% | Tile mosaic framed in the B2 lobby, the 2011 wreck on Nightingale |
 | agreement-1817 | 1,326,358 | 21,422 | −98% | Framed on the B2 mezzanine |
 | hen | 834,623 | 61,490 | −93% | Photo on James's cubicle panel |
 | farm | — | 57,044 | — | Framed beside James's desk |
 | fire-git | 33,130 | 11,622 | −65% | Printout pinned in Ava's cubicle |
 | happy-feet-dvd | 255,492 | 7,448 | −97% | Cover of the DVD in the storage room, half torn off |
+
+The albatross and the Oliva are tile mosaics built from photographs the repo has no rights to, so neither photograph ships.
 
 The agreement is the page the first settlers of Tristan da Cunha signed at Somerset Camp on 7 November 1817. It is cropped out of the binding and held at 560 px wide.
 
@@ -204,4 +210,4 @@ scripts/
 
 Geometry and hierarchy are JSX. `useMemo` only holds what has to stay stable across renders — procedural data, textures, materials — because a randomised texture rebuilt on a re-render both costs frames and visibly reshuffles the scene.
 
-The building, the Parliament, the symposium and everyone in it are made up. London is London. Inaccessible Island is real: the uninhabited one in the Tristan da Cunha group, cliffs all round and one waterfall down the north face. So are its two birds, the wreck of the Blenden Hall in 1821, and the 1817 agreement.
+The building, the Parliament, the symposium and everyone in it are made up. London is London. Inaccessible Island is real: the uninhabited one in the Tristan da Cunha group, cliffs all round and one waterfall down the north face. So are its two birds, the wreck of the MS Oliva in 2011, and the 1817 agreement.
