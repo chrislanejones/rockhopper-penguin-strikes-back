@@ -14,13 +14,21 @@ const SHELVES = 5
 /** Where the run of three cases sits. It stops where the whiteboard begins. */
 const XS = [22.4, 24.8, 27.2]
 
-type SpineKind = 'blue' | 'code' | 'acts' | 'binder' | 'misc'
+type SpineKind = 'blue' | 'code' | 'acts' | 'annual' | 'binder' | 'misc'
+
+/** Three of Tristan da Cunha's founding families, each with its own annual. */
+const FAMILIES = [
+  { name: 'GLASS', cloth: '#1d3557', ink: '#e9d8a6' },
+  { name: 'GREEN', cloth: '#2d5a3d', ink: '#f1e3b8' },
+  { name: 'LAVARELLO', cloth: '#6b2233', ink: '#f3dcc0' },
+] as const
 
 /**
  * Book spines, drawn to type.
  *
  * The reference shelf is what a Parliament office actually keeps: Blue
- * Books, the Code of the Island, Acts of Parliament, and a run of policy binders.
+ * Books, the Code of the Island, Acts of Parliament, the family annuals, and a
+ * run of policy binders.
  */
 function spineTex(kind: SpineKind, n: number) {
   return canvasTex(64, 256, (g, w, h) => {
@@ -72,9 +80,26 @@ function spineTex(kind: SpineKind, n: number) {
       g.textAlign = 'center'
       g.fillStyle = '#e6dcb8'
       g.font = 'bold 13px serif'
-      g.fillText('ACTS OF ASSEMBLY', 0, -2)
+      g.fillText('ACTS OF PARLIAMENT', 0, -2)
       g.font = '12px serif'
       g.fillText(String(1990 + n), 0, 16)
+      g.restore()
+    } else if (kind === 'annual') {
+      // n runs family by family: Glass, Green, Lavarello, then the next year
+      const f = FAMILIES[n % FAMILIES.length]
+      g.fillStyle = f.cloth
+      g.fillRect(0, 0, w, h)
+      g.fillStyle = f.ink
+      g.fillRect(4, 12, w - 8, 3)
+      g.fillRect(4, h - 18, w - 8, 3)
+      g.save()
+      g.translate(w / 2, h / 2)
+      g.rotate(-Math.PI / 2)
+      g.textAlign = 'center'
+      g.font = `bold ${f.name.length > 6 ? 14 : 17}px Georgia, serif`
+      g.fillText(f.name, -16, -6)
+      g.font = '11px Georgia, serif'
+      g.fillText('FAMILY ANNUAL  ' + (2024 + Math.floor(n / FAMILIES.length)), -16, 12)
       g.restore()
     } else if (kind === 'binder') {
       const cols = ['#2b4a7a', '#6b6b6b', '#7a4a2b', '#3f5f3f']
@@ -131,7 +156,7 @@ function shelfPlan(caseIndex: number, rowIndex: number): [SpineKind, number, num
   if (caseIndex === 0) {
     if (rowIndex < 3) return ['blue', 8, 1994 + rowIndex * 16, false]
     if (rowIndex === 3) return ['acts', 7, rowIndex * 3, true]
-    return ['misc', 6, rowIndex, false]
+    return ['annual', 6, 0, false]
   }
   if (caseIndex === 1) return ['code', rowIndex < 4 ? 8 : 6, 1 + rowIndex * 8, rowIndex === 4]
   if (rowIndex < 2) return ['binder', 5, rowIndex, false]
