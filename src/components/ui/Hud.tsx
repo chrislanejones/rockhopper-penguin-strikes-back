@@ -4,7 +4,7 @@ import { Watch } from './Watch'
 /** What each collectable looks like in the corner, and what it is called. */
 const ITEMS: Record<string, { glyph: string; name: string }> = {
   'safe-key': { glyph: '🔑', name: 'Small brass key' },
-  'gas-card': { glyph: '⛽', name: '$5 gas card' },
+  'gas-card': { glyph: '⛽', name: '£5 fuel card' },
 }
 
 export function Hud() {

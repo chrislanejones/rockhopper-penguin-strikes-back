@@ -94,7 +94,7 @@ Units are feet, everywhere. Eight-foot ceilings and a 2x4 lay-in grid stay whole
 The safe is locked. The key is a small brass thing on a desk out in the
 cubicles, stamped 2301 so you know where it goes. What is in the safe is the box
 of passports the compliance board has been asking about since March, and a five
-dollar gas card that expired in 2019.
+pound fuel card that expired in 2019.
 
 Things that do something: the drip coffee maker brews when you press its
 button; the single-serve one next to it fills a paper cup you can take, and

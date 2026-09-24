@@ -314,7 +314,7 @@ export const wallpaperLabelTex = lazy(() =>
     g.fillStyle = '#333'
     g.font = 'italic 17px serif'
     g.textAlign = 'center'
-    g.fillText('Night Garden · $62/roll · ask Jordan', w / 2, 32)
+    g.fillText('Night Garden · £62/roll · ask Jordan', w / 2, 32)
   }),
 )
 
@@ -1425,7 +1425,7 @@ export const passportTex = lazy(() =>
   }),
 )
 
-/** The five-dollar gas card, which is the whole treasure. */
+/** The five-pound fuel card, which is the whole treasure. */
 export const gasCardTex = lazy(() =>
   canvasTex(320, 200, (g, w, h) => {
     const bg = g.createLinearGradient(0, 0, w, h)
@@ -1444,10 +1444,10 @@ export const gasCardTex = lazy(() =>
     g.fillText('PARLIAMENT FUEL', 20, 44)
     g.font = 'bold 54px Georgia, serif'
     g.fillStyle = '#f2c53d'
-    g.fillText('$5', 20, 108)
+    g.fillText('£5', 20, 108)
     g.font = 'bold 17px Georgia, serif'
     g.fillStyle = '#f4efe2'
-    g.fillText('GAS CARD', 82, 104)
+    g.fillText('FUEL CARD', 82, 104)
 
     g.font = '11px sans-serif'
     g.fillStyle = '#bcd8c4'

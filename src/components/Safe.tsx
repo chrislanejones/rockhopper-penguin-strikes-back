@@ -60,7 +60,7 @@ export function Safe({ x, z }: { x: number; z: number }) {
     setOpen(next)
     showHint(
       next
-        ? 'The key turns. Inside: the box of passports, and a five dollar gas card.'
+        ? 'The key turns. Inside: the box of passports, and a five pound fuel card.'
         : 'Safe shut.',
       3400,
     )
@@ -121,7 +121,7 @@ export function Safe({ x, z }: { x: number; z: number }) {
 
         {/*
           What is in it: the box of passports the compliance board has been
-          asking about since March, and a five dollar gas card.
+          asking about since March, and a five pound fuel card.
         */}
         <group position={[-0.38, 0.42, -0.28]} rotation={[0, 0.14, 0]}>
           {[0, 1, 2, 3, 4].map((i) => (
@@ -156,8 +156,8 @@ export function Safe({ x, z }: { x: number; z: number }) {
 
         <Collectable
           id="gas-card"
-          label="$5 gas card"
-          hint="A five dollar gas card. It expired in 2019."
+          label="£5 fuel card"
+          hint="A five pound fuel card. It expired in 2019."
         >
           <group position={[0.42, 1.42, -0.46]} rotation={[0, 0.24, 0]}>
             <Box size={[0.56, 0.02, 0.35]} material={cardMat} position={[0, 0, 0]} />
