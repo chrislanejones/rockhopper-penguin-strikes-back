@@ -5,7 +5,7 @@ import { M, mat } from '../scene/materials'
 import { BX2, BZ, BZ2, CL, CL2, CR, CR2, DZ, DZ3, EX3, HALF, LX, LX2, V } from '../scene/constants'
 import { Workstation } from './props/Desk'
 import {
-  Chair, DeskFrame, FloorFan, Keyboard, Monitor, Mug, Plant, Plaque, Robot, Rooster,
+  Chair, DeskFrame, FloorFan, Keyboard, Monitor, Mug, Plant, Plaque, Rail, Robot,
   StackPaper, Trophy,
 } from './props/Furniture'
 import {
@@ -72,8 +72,9 @@ function StatusLights({
  *
  * Keeps chickens. There is a photograph of a hen and her brood on the panel
  * he faces, the farm gate framed on the wall beside him, a copy of the
- * almanac by the keyboard, and the rooster on the desk is the one he debugs
- * at. The hackathon plaque that hung where the farm does came down.
+ * almanac by the keyboard, and the rubber Inaccessible Island rail on the
+ * desk is the one he debugs at. The hackathon plaque that hung where the farm
+ * does came down.
  */
 function James() {
   const [hen, farm] = useTexture(['/textures/hen.webp', '/textures/farm.webp'])
@@ -135,7 +136,7 @@ function James() {
           }}
         />
         <Keyboard x={-0.2} z={-0.5} />
-        <Pickable label="rubber rooster"><Rooster x={2.6} z={0.6} /></Pickable>
+        <Pickable label="rubber rail"><Rail x={2.6} z={0.6} /></Pickable>
         <Pickable label="desk robot"><Robot x={-2.8} z={0.4} /></Pickable>
         <Pickable label="mug"><Mug x={-2.4} z={-0.5} material={mat.black} /></Pickable>
         {/*

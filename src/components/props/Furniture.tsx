@@ -222,51 +222,63 @@ export function Plaque({
 }
 
 /**
- * Rubber rooster. Standard issue for debugging, in this office.
+ * Rubber Inaccessible Island rail. Standard issue for debugging, in this
+ * office.
  *
- * Body, tail, head and neck in russet; comb, wattle and beak on the front of
- * the head. He faces +X, the way the duck he replaced did, so anything that
- * picks him up holds him the same way round.
+ * The smallest flightless bird there is, and it lives nowhere else: a round
+ * dark-chestnut body, stubby wings with faint white bars, a short black bill
+ * and red eyes. It faces +X, the way the duck it replaced did, so anything
+ * that picks it up holds it the same way round.
  */
-export function Rooster({ x, z }: { x: number; z: number }) {
-  const body = useMemo(() => M(0x9c4a24, { roughness: 0.75 }), [])
-  const comb = useMemo(() => M(0xd42a2a, { roughness: 0.7 }), [])
-  const beak = useMemo(() => M(0xffb02e, { roughness: 0.6 }), [])
+export function Rail({ x, z }: { x: number; z: number }) {
+  const body = useMemo(() => M(0x3b2a1e, { roughness: 0.8 }), [])
+  const wing = useMemo(() => M(0x2e2118, { roughness: 0.8 }), [])
+  const bar = useMemo(() => M(0xe8e2d4, { roughness: 0.7 }), [])
+  const bill = useMemo(() => M(0x15120f, { roughness: 0.5 }), [])
+  const eye = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: 0xc0201a, emissive: 0x5a0a08, roughness: 0.3 }),
+    [],
+  )
   return (
     <>
-      {/* body, and the tail fanned up behind it */}
-      <mesh position={[x, 0.2, z]} scale={[1.15, 0.85, 0.9]} material={body}>
-        <sphereGeometry args={[0.22, 12, 10]} />
+      {/* body, round and low, and the stub of a tail */}
+      <mesh position={[x, 0.17, z]} scale={[1.2, 0.85, 0.85]} material={body}>
+        <sphereGeometry args={[0.18, 14, 10]} />
       </mesh>
-      {[-0.22, 0, 0.22].map((a) => (
-        <mesh
-          key={a}
-          position={[x - 0.24, 0.34, z + a * 0.28]}
-          rotation={[a, 0, 1.15]}
-          material={body}
-        >
-          <coneGeometry args={[0.055, 0.34, 6]} />
+      <mesh position={[x - 0.22, 0.2, z]} rotation={[0, 0, 1.3]} material={body}>
+        <coneGeometry args={[0.05, 0.12, 6]} />
+      </mesh>
+      {/* the wings it cannot fly with, barred in white */}
+      {[-1, 1].map((sz) => (
+        <group key={sz}>
+          <mesh position={[x - 0.03, 0.2, z + sz * 0.13]} scale={[1.1, 0.7, 0.3]} material={wing}>
+            <sphereGeometry args={[0.12, 10, 8]} />
+          </mesh>
+          {[-0.06, 0, 0.06].map((o) => (
+            <mesh key={o} position={[x - 0.03 + o, 0.2, z + sz * 0.165]} rotation={[0, 0, 0.5]} material={bar}>
+              <boxGeometry args={[0.012, 0.09, 0.006]} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+      {/* head, bill and the red eyes */}
+      <mesh position={[x + 0.2, 0.3, z]} material={body}>
+        <sphereGeometry args={[0.09, 12, 10]} />
+      </mesh>
+      <mesh position={[x + 0.31, 0.29, z]} rotation={[0, 0, -Math.PI / 2]} material={bill}>
+        <coneGeometry args={[0.028, 0.1, 8]} />
+      </mesh>
+      {[-1, 1].map((sz) => (
+        <mesh key={sz} position={[x + 0.25, 0.32, z + sz * 0.065]} material={eye}>
+          <sphereGeometry args={[0.018, 8, 6]} />
         </mesh>
       ))}
-      {/* neck and head */}
-      <mesh position={[x + 0.11, 0.38, z]} rotation={[0, 0, -0.3]} material={body}>
-        <cylinderGeometry args={[0.075, 0.1, 0.22, 8]} />
-      </mesh>
-      <mesh position={[x + 0.17, 0.5, z]} scale={[1, 0.95, 0.9]} material={body}>
-        <sphereGeometry args={[0.115, 10, 8]} />
-      </mesh>
-      {/* comb along the crown, wattle under the chin, beak out front */}
-      {[-0.05, 0, 0.05].map((o) => (
-        <mesh key={o} position={[x + 0.17 + o, 0.6, z]} material={comb}>
-          <coneGeometry args={[0.028, 0.075, 6]} />
+      {/* legs, dark and short */}
+      {[-1, 1].map((sz) => (
+        <mesh key={sz} position={[x + 0.02, 0.04, z + sz * 0.06]} material={bill}>
+          <cylinderGeometry args={[0.012, 0.012, 0.08, 6]} />
         </mesh>
       ))}
-      <mesh position={[x + 0.25, 0.44, z]} scale={[0.6, 1, 0.5]} material={comb}>
-        <sphereGeometry args={[0.05, 8, 6]} />
-      </mesh>
-      <mesh position={[x + 0.29, 0.51, z]} rotation={[0, 0, -Math.PI / 2]} material={beak}>
-        <coneGeometry args={[0.04, 0.11, 8]} />
-      </mesh>
     </>
   )
 }
