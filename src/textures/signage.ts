@@ -660,7 +660,7 @@ export const sodaFrontTex = lazy(() =>
     g.fillText('ICE COLD', w / 2, 330)
     g.font = '13px sans-serif'
     g.fillStyle = '#9fc0e8'
-    g.fillText('$1.25  ·  EXACT CHANGE', w / 2, 352)
+    g.fillText('£1.25  ·  EXACT CHANGE', w / 2, 352)
     g.fillStyle = '#0a2145'
     g.fillRect(20, 366, w - 40, 34)
     g.fillStyle = '#7f93ad'
