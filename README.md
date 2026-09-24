@@ -141,7 +141,7 @@ ignores both, so the whole of her is on the carpet whatever you can see.
 
 ## Images
 
-Nine image files in `public/textures/`. Everything else in the scene is drawn with the 2D canvas API at load time — ceiling tiles, monitor screens, book spines, box labels, the flag, the paintings in the lobbies. It keeps the download small and the labels legible.
+Ten image files in `public/textures/`. Everything else in the scene is drawn with the 2D canvas API at load time — ceiling tiles, monitor screens, book spines, box labels, the flag, the paintings in the lobbies. It keeps the download small and the labels legible.
 
 | Asset | Source | WebP | Change | Where |
 | --- | --- | --- | --- | --- |
@@ -149,13 +149,14 @@ Nine image files in `public/textures/`. Everything else in the scene is drawn wi
 | albatross | 1,759,438 | 24,898 | −99% | Tile mosaic on the break-room wall calendar |
 | oliva-wreck | 784,750 | 22,666 | −97% | Tile mosaic framed in the B2 lobby, the 2011 wreck on Nightingale |
 | loneliest-house | 3,597,494 | 25,976 | −99% | Tile mosaic taped to the storage-room end wall |
+| stamp-1961 | 213,484 | 8,928 | −96% | Tile mosaic of Tristan's 1961 eruption stamp, framed over the kettle |
 | agreement-1817 | 1,326,358 | 21,422 | −98% | Framed on the B2 mezzanine |
 | hen | 834,623 | 61,490 | −93% | Photo on James's cubicle panel |
 | farm | — | 57,044 | — | Framed beside James's desk |
 | fire-git | 33,130 | 11,622 | −65% | Printout pinned in Ava's cubicle |
 | happy-feet-dvd | 255,492 | 7,448 | −97% | Cover of the DVD in the storage room, half torn off |
 
-The albatross, the Oliva and the loneliest house are tile mosaics built from photographs the repo has no rights to, so none of the photographs ship. The house on Elliðaey comes out as one white tile.
+The albatross, the Oliva, the loneliest house and the 1961 stamp are tile mosaics built from pictures the repo has no rights to, so none of the originals ship. The house on Elliðaey comes out as one white tile.
 
 The agreement is the page the first settlers of Tristan da Cunha signed at Somerset Camp on 7 November 1817. It is cropped out of the binding and held at 560 px wide.
 

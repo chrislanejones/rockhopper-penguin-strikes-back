@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { M, mat } from '../scene/materials'
 import { H, HALF, LX, RX0, TV_STAFF, TV_WEATHER, V, candela } from '../scene/constants'
@@ -1248,6 +1249,37 @@ const CARAFE = [
 const BREW = CARAFE.slice(0, 7).map((v) => new THREE.Vector2(Math.max(0, v.x - 0.018), v.y))
 
 /**
+ * The 1961 eruption stamp, blown up as a tile mosaic and framed over the
+ * kettle.
+ *
+ * Tristan's own issue: the volcano in section, the lava coming down behind
+ * Edinburgh of the Seven Seas the year the whole island was taken off to
+ * England. It hangs by the coffee notice, because the boat is how they left.
+ */
+function StampPrint({ x, y, z }: { x: number; y: number; z: number }) {
+  const art = useTexture('/textures/stamp-1961.webp')
+  art.colorSpace = THREE.SRGBColorSpace
+  art.anisotropy = 8
+  const stamp = useMemo(() => new THREE.MeshStandardMaterial({ map: art, roughness: 0.6 }), [art])
+  const mount = useMemo(() => M(0xf3f0e8, { roughness: 0.9 }), [])
+  const frame = useMemo(() => M(0x1d1f22, { roughness: 0.5 }), [])
+
+  // stamp-1961.webp is a 296 x 240 mosaic of the stamp
+  const sw = 1.1
+  const sh = sw * (240 / 296)
+
+  return (
+    <group position={[x, y, z]} rotation={[0, V, 0]}>
+      <mesh position={[0, 0, 0.025]} material={frame} castShadow>
+        <boxGeometry args={[sw + 0.5, sh + 0.5, 0.05]} />
+      </mesh>
+      <Panel size={[sw + 0.38, sh + 0.38]} material={mount} position={[0, 0, 0.052]} />
+      <Panel size={[sw, sh]} material={stamp} position={[0, 0, 0.056]} />
+    </group>
+  )
+}
+
+/**
  * The kettle, on its power base at the south end of the counter.
  *
  * A London office runs on it: the coffee machine is for visitors. Brushed
@@ -1737,6 +1769,7 @@ export function BreakArea() {
       ))}
       <SugarCaddy x={EX + 1.2} z={BZ + 1.9} />
       <Kettle x={EX + 1.25} z={BZ + 3.5} y={CTOP} />
+      <StampPrint x={EX + 0.4} y={6.0} z={BZ + 3.5} />
 
       {/*
         The drinking fountain, on the west wall between the copier and the

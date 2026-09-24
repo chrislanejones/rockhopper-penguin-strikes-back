@@ -46,8 +46,8 @@ export function ComplianceBoard() {
         map: noticeTex({
           header: 'NOTICE TO ALL STAFF',
           headerColour: '#0d3b66',
-          emphasis: 'Box with Passports must go to Delaware',
-          lines: ['Do not open. Do not re-label.', 'Do not send by media mail.', '', 'See Chris before moving.'],
+          emphasis: 'Box with Passports goes on the Tristan boat',
+          lines: ['Do not open. Do not re-label.', 'Not by airmail: there is no airport.', '', 'See the Speaker before moving.'],
           footer: 'POST CONSPICUOUSLY — DO NOT REMOVE',
         }),
         roughness: 0.8,
