@@ -69,7 +69,7 @@ export const kanbanTex = lazy(() =>
     g.fillStyle = '#d13c2e'
     g.font = 'italic 18px sans-serif'
     g.textAlign = 'left'
-    g.fillText('DO NOT ERASE — Vicki', 20, h - 16)
+    g.fillText('DO NOT ERASE — Liz', 20, h - 16)
   }),
 )
 
@@ -234,7 +234,7 @@ export const fridgeFlyerTex = lazy(() =>
     g.fillText('YOUR', w / 2, 95)
     g.fillText('FOOD', w / 2, 130)
     g.font = '14px sans-serif'
-    g.fillText('this means you, Michael', w / 2, 190)
+    g.fillText('this means you, Dax', w / 2, 190)
   }),
 )
 
@@ -1193,82 +1193,6 @@ export const squirrelPhotoTex = lazy(() =>
   }),
 )
 
-/**
- * "THIS Greenville" — Priya's third poster, and a standing correction.
- *
- * She is from Greenville, North Carolina. Everybody assumes South Carolina,
- * so she printed a poster about it and stopped explaining.
- */
-export const greenvilleTex = lazy(() =>
-  canvasTex(300, 440, (g, w, h) => {
-    g.fillStyle = '#f2ece0'
-    g.fillRect(0, 0, w, h)
-    g.strokeStyle = '#1f5c3d'
-    g.lineWidth = 6
-    g.strokeRect(14, 14, w - 28, h - 28)
-
-    g.textAlign = 'center'
-    g.fillStyle = '#1f5c3d'
-    g.font = 'bold 44px Georgia, serif'
-    g.fillText('THIS', w / 2, 84)
-    g.font = 'bold 33px Georgia, serif'
-    g.fillStyle = '#1c1a16'
-    g.fillText('Greenville', w / 2, 126)
-
-    // North Carolina, roughly, with the town marked
-    const ox = 24
-    const oy = 168
-    g.fillStyle = '#cfe0d2'
-    g.beginPath()
-    g.moveTo(ox + 6, oy + 44)
-    g.lineTo(ox + 40, oy + 20)
-    g.lineTo(ox + 120, oy + 12)
-    g.lineTo(ox + 196, oy + 18)
-    g.lineTo(ox + 232, oy + 40)
-    g.lineTo(ox + 226, oy + 66)
-    g.lineTo(ox + 188, oy + 88)
-    g.lineTo(ox + 120, oy + 96)
-    g.lineTo(ox + 44, oy + 80)
-    g.closePath()
-    g.fill()
-    g.strokeStyle = '#1f5c3d'
-    g.lineWidth = 2
-    g.stroke()
-
-    g.fillStyle = '#b8281e'
-    g.beginPath()
-    g.arc(ox + 176, oy + 48, 7, 0, 7)
-    g.fill()
-    g.fillStyle = '#1c1a16'
-    g.font = 'bold 13px Georgia, serif'
-    g.textAlign = 'left'
-    g.fillText('Greenville, NC', ox + 190, oy + 44)
-    g.font = 'italic 11px Georgia, serif'
-    g.fillStyle = '#5a6b5e'
-    g.fillText('Pitt County', ox + 190, oy + 60)
-
-    g.textAlign = 'center'
-    g.fillStyle = '#1c1a16'
-    g.font = 'bold 16px Georgia, serif'
-    g.fillText('NORTH CAROLINA', w / 2, 316)
-
-    g.fillStyle = '#7a7268'
-    g.font = 'italic 14px Georgia, serif'
-    g.fillText('not the other one', w / 2, 348)
-    g.font = '12px Georgia, serif'
-    g.fillText('(that is Greenville, SC — 300 miles', w / 2, 378)
-    g.fillText('south-west, and not where I am from)', w / 2, 396)
-
-    g.strokeStyle = '#b8281e'
-    g.lineWidth = 3
-    g.beginPath()
-    g.moveTo(80, 406)
-    g.lineTo(220, 406)
-    g.stroke()
-  }),
-)
-
-
 /** Ray's I ♥ TEXAS pennant. Network operations, and he will tell you. */
 export const texasTex = lazy(() =>
   canvasTex(420, 260, (g, w, h) => {
@@ -1316,94 +1240,6 @@ export const texasTex = lazy(() =>
     g.font = 'italic 14px Georgia, serif'
     g.fillStyle = '#e8c9a8'
     g.fillText('and I will tell you about it', 124, h / 2 + 34)
-  }),
-)
-
-/**
- * The sign over the bin in the marketing bay.
- *
- * Somebody printed it, laminated it, and hung it where the whole bay can see
- * it. Nobody has owned up and nobody has taken it down.
- */
-export const ideasBinSignTex = lazy(() =>
-  canvasTex(440, 300, (g, w, h) => {
-    g.fillStyle = '#fbfaf6'
-    g.fillRect(0, 0, w, h)
-    g.strokeStyle = '#c9cdd4'
-    g.lineWidth = 3
-    g.strokeRect(8, 8, w - 16, h - 16)
-
-    // the elephant, drawn side-on
-    const bx = 108
-    const by = 108
-    g.fillStyle = '#2b63c9'
-    g.beginPath()
-    g.ellipse(bx, by, 52, 38, 0, 0, 7)
-    g.fill()
-    // head
-    g.beginPath()
-    g.ellipse(bx + 52, by - 8, 27, 26, 0, 0, 7)
-    g.fill()
-    // ear
-    g.fillStyle = '#2455ad'
-    g.beginPath()
-    g.ellipse(bx + 44, by - 12, 19, 22, -0.25, 0, 7)
-    g.fill()
-    // trunk, curling down and under
-    g.strokeStyle = '#2b63c9'
-    g.lineCap = 'round'
-    g.lineWidth = 15
-    g.beginPath()
-    g.moveTo(bx + 76, by - 2)
-    g.quadraticCurveTo(bx + 94, by + 26, bx + 80, by + 46)
-    g.stroke()
-    // tusk
-    g.strokeStyle = '#eef1f6'
-    g.lineWidth = 5
-    g.beginPath()
-    g.moveTo(bx + 70, by + 12)
-    g.lineTo(bx + 86, by + 22)
-    g.stroke()
-    // legs
-    g.fillStyle = '#2b63c9'
-    ;[-34, -8, 20, 40].forEach((ox, i) => {
-      g.fillRect(bx + ox - 8, by + 26, 17, i % 2 ? 40 : 44)
-    })
-    // tail
-    g.strokeStyle = '#2b63c9'
-    g.lineWidth = 6
-    g.beginPath()
-    g.moveTo(bx - 50, by - 6)
-    g.quadraticCurveTo(bx - 66, by + 6, bx - 60, by + 26)
-    g.stroke()
-    // eye
-    g.fillStyle = '#fbfaf6'
-    g.beginPath()
-    g.arc(bx + 62, by - 14, 4, 0, 7)
-    g.fill()
-
-    g.fillStyle = '#1c1a16'
-    g.textAlign = 'left'
-    g.font = 'bold 33px Georgia, serif'
-    g.fillText('ideas', 214, 100)
-    g.font = 'bold 30px Georgia, serif'
-    g.fillText('go here', 214, 138)
-
-    // the arrow, straight down at the bin
-    g.strokeStyle = '#b8281e'
-    g.lineWidth = 9
-    g.lineCap = 'round'
-    g.beginPath()
-    g.moveTo(w / 2, 186)
-    g.lineTo(w / 2, 258)
-    g.stroke()
-    g.fillStyle = '#b8281e'
-    g.beginPath()
-    g.moveTo(w / 2 - 22, 250)
-    g.lineTo(w / 2 + 22, 250)
-    g.lineTo(w / 2, 284)
-    g.closePath()
-    g.fill()
   }),
 )
 

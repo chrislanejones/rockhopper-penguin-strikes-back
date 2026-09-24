@@ -89,7 +89,7 @@ Units are feet, everywhere. Eight-foot ceilings and a 2x4 lay-in grid stay whole
 | Storage 2301 | A 13 x 36 strip down the east side: racks, paper, e-waste, eleven dead laptops, a teaching skeleton in a paper crown, and a safe |
 | Lift lobby | A 64 ft corridor along the south side: a window at one end, the lift in a bay, two badge doors, a British food cart parked by the glass |
 | Restrooms | Two 10 x 11 rooms off the lobby: tile, a vanity with a mirror that works, two stalls each, urinals in the men's. She will go in one of them |
-| Outside | 130 towers, a street grid with 110 cars, and the Thames |
+| Outside | The Walkie-Talkie straight out the glass, 130 more towers, a street grid with 110 cars, and the Thames |
 
 The safe is locked. The key is a small brass thing on a desk out in the
 cubicles, stamped 2301 so you know where it goes. What is in the safe is the box
@@ -141,20 +141,21 @@ ignores both, so the whole of her is on the carpet whatever you can see.
 
 ## Images
 
-Eight image files in `public/textures/`. Everything else in the scene is drawn with the 2D canvas API at load time — ceiling tiles, monitor screens, book spines, box labels, the flag, the paintings in the lobbies. It keeps the download small and the labels legible.
+Nine image files in `public/textures/`. Everything else in the scene is drawn with the 2D canvas API at load time — ceiling tiles, monitor screens, book spines, box labels, the flag, the paintings in the lobbies. It keeps the download small and the labels legible.
 
 | Asset | Source | WebP | Change | Where |
 | --- | --- | --- | --- | --- |
 | gatekeeper | 709,723 | 49,622 | −93% | Framed in the lift lobby: You Shall Not Pass |
 | albatross | 1,759,438 | 24,898 | −99% | Tile mosaic on the break-room wall calendar |
 | oliva-wreck | 784,750 | 22,666 | −97% | Tile mosaic framed in the B2 lobby, the 2011 wreck on Nightingale |
+| loneliest-house | 3,597,494 | 25,976 | −99% | Tile mosaic taped to the storage-room end wall |
 | agreement-1817 | 1,326,358 | 21,422 | −98% | Framed on the B2 mezzanine |
 | hen | 834,623 | 61,490 | −93% | Photo on James's cubicle panel |
 | farm | — | 57,044 | — | Framed beside James's desk |
 | fire-git | 33,130 | 11,622 | −65% | Printout pinned in Ava's cubicle |
 | happy-feet-dvd | 255,492 | 7,448 | −97% | Cover of the DVD in the storage room, half torn off |
 
-The albatross and the Oliva are tile mosaics built from photographs the repo has no rights to, so neither photograph ships.
+The albatross, the Oliva and the loneliest house are tile mosaics built from photographs the repo has no rights to, so none of the photographs ship. The house on Elliðaey comes out as one white tile.
 
 The agreement is the page the first settlers of Tristan da Cunha signed at Somerset Camp on 7 November 1817. It is cropped out of the binding and held at 560 px wide.
 

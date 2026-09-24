@@ -6,7 +6,7 @@ import { GROUND_Y } from '../scene/constants'
 import { RIVER } from '../scene/city'
 import { SKY_FRAG, SKY_VERT, cloudTex } from '../textures/outside'
 import { City } from './City'
-import { LotteryTower } from './LotteryTower'
+import { WalkieTalkie } from './WalkieTalkie'
 import { Streets } from './Streets'
 import { Infrastructure } from './Infrastructure'
 
@@ -96,7 +96,7 @@ export function Outside() {
 
       <Clouds />
       <City />
-      <LotteryTower />
+      <WalkieTalkie />
 
       {/* street grid, blocks and traffic far below */}
       <Streets />

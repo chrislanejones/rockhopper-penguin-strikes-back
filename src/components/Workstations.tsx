@@ -9,7 +9,7 @@ import {
   StackPaper, Trophy,
 } from './props/Furniture'
 import {
-  a11yPosterTex, almanacTex, diplomaTex, greenvilleTex, npsPosterTex, stickyTex,
+  a11yPosterTex, almanacTex, diplomaTex, npsPosterTex, stickyTex,
   texasTex, thesisCoverTex,
 } from '../textures/signage'
 import { Box, Panel } from './props/primitives'
@@ -284,10 +284,6 @@ function Priya() {
       ),
     [],
   )
-  const greenville = useMemo(
-    () => new THREE.MeshStandardMaterial({ map: greenvilleTex(), roughness: 0.85 }),
-    [],
-  )
   const balls = useMemo(
     () =>
       [
@@ -337,8 +333,7 @@ function Priya() {
       </Workstation>
       {/*
         Two Park Service posters on the corridor panel she faces from her
-        chair, and the standing correction about which Greenville on the wall
-        behind her, beside the plaques.
+        chair.
       */}
       {parks.map((m, i) => (
         <Panel
@@ -349,13 +344,6 @@ function Priya() {
           rotation={[0, V, (i === 1 ? -1 : 1) * 0.014]}
         />
       ))}
-      {/* the partition is a half-foot thick box on HALF; this sits just proud of its west face */}
-      <Panel
-        size={[1.65, 2.42]}
-        material={greenville}
-        position={[HALF - 0.28, 5.0, -9.4]}
-        rotation={[0, -V, 0.012]}
-      />
 
       <Plaque x={HALF - 0.15} y={5.2} z={-14} ry={-V} lines={['GOLD ADDY', 'Campaign of', 'the Year']} />
       <Plaque

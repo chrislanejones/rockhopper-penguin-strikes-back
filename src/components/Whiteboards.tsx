@@ -6,7 +6,7 @@ import { kanbanTex, onCallTex } from '../textures/signage'
 import { Box, Panel } from './props/primitives'
 import { MarkerTray } from './props/Furniture'
 
-/** Kanban board on the south wall of the main suite. DO NOT ERASE — Vicki. */
+/** Kanban board on the south wall of the main suite. DO NOT ERASE — Liz. */
 export function KanbanBoard() {
   const board = useMemo(
     () => new THREE.MeshStandardMaterial({ map: kanbanTex(), roughness: 0.35 }),

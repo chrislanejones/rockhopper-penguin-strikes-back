@@ -4,9 +4,9 @@ import * as THREE from 'three'
 import { M, mat } from '../scene/materials'
 import { kick } from '../lib/avatar'
 import { fireDart } from './Darts'
-import { BZ, CL, CR as CORRIDOR_R, DZ, HALF, RX0, V } from '../scene/constants'
+import { BZ, CL, DZ, HALF, RX0, V } from '../scene/constants'
 import {
-  copierScreenTex, corvetteTex, ideasBinSignTex, nightGardenTex, plaidTex, wallpaperLabelTex,
+  copierScreenTex, corvetteTex, nightGardenTex, plaidTex, wallpaperLabelTex,
 } from '../textures/signage'
 import { Box, Collider, Panel } from './props/primitives'
 import { StackPaper } from './props/Furniture'
@@ -582,70 +582,3 @@ export function CorvettePoster() {
   )
 }
 
-/**
- * The bin in the corner of the marketing bay, and the sign over it.
- *
- * Jordan's corner, by the corridor. The sign has been up long enough that
- * nobody looks at it any more, which is the fate of every sign in here.
- */
-export function IdeasBin() {
-  const sign = useMemo(
-    () => new THREE.MeshStandardMaterial({ map: ideasBinSignTex(), roughness: 0.4 }),
-    [],
-  )
-  const bin = useMemo(
-    () => M(0x2b2d31, { roughness: 0.55, side: THREE.DoubleSide }),
-    [],
-  )
-  const liner = useMemo(
-    () => M(0x9aa3ad, { roughness: 0.7, transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
-    [],
-  )
-  const paper = useMemo(() => M(0xf2efe4, { roughness: 0.95 }), [])
-
-  const x = CORRIDOR_R + 1.2
-  const z = BZ - 1.2
-
-  /** Three balled-up ideas, two of which missed. */
-  const balls = useMemo(
-    () =>
-      [
-        [x - 0.12, 1.34, z + 0.1, 0.17],
-        [x + 1.05, 0.16, z + 0.5, 0.15],
-        [x + 0.5, 0.14, z + 1.25, 0.13],
-      ] as const,
-    [x, z],
-  )
-
-  return (
-    <>
-      <mesh position={[x, 0.78, z]} material={bin} castShadow>
-        <cylinderGeometry args={[0.62, 0.48, 1.56, 22, 1, true]} />
-      </mesh>
-      <mesh position={[x, 0.02, z]} material={bin}>
-        <cylinderGeometry args={[0.48, 0.48, 0.04, 22]} />
-      </mesh>
-      {/* the liner, folded over the rim */}
-      <mesh position={[x, 1.5, z]} material={liner}>
-        <cylinderGeometry args={[0.66, 0.6, 0.2, 22, 1, true]} />
-      </mesh>
-      <mesh position={[x, 1.62, z]} material={bin}>
-        <torusGeometry args={[0.62, 0.035, 8, 24]} />
-      </mesh>
-
-      {balls.map(([bx, by, bz, r], i) => (
-        <mesh key={i} position={[bx, by, bz]} material={paper} castShadow>
-          <dodecahedronGeometry args={[r, 0]} />
-        </mesh>
-      ))}
-
-      {/* the sign, on the panel above the bin */}
-      <Panel
-        size={[2.2, 1.5]}
-        material={sign}
-        position={[x, 4.4, BZ - 0.13]}
-        rotation={[0, Math.PI, 0.015]}
-      />
-    </>
-  )
-}

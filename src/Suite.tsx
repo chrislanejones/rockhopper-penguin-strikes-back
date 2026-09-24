@@ -16,11 +16,11 @@ import { StorageDoor } from './components/StorageDoor'
 import { SAFE_AT, Safe } from './components/Safe'
 import { Flag } from './components/Flag'
 import { WaterCooler, ParliamentSign } from './components/WingCommons'
-import { Calendar, IitsBanner, IitsPoster, SteamerPoster } from './components/WallArt'
+import { Calendar, IitsBanner, IitsPoster, LoneliestHousePrint } from './components/WallArt'
 import { ComplianceBoard } from './components/ComplianceBoard'
 import { Darts } from './components/Darts'
 import {
-  CorvettePoster, FoamBlaster, IdeasBin, PrinterStation, RecordWall,
+  CorvettePoster, FoamBlaster, PrinterStation, RecordWall,
   WallpaperSamples,
 } from './components/Extras'
 import { Suspense, useEffect } from 'react'
@@ -60,7 +60,6 @@ export function Suite() {
       <Workstations />
       <IitsBanner />
       <CorvettePoster />
-      <IdeasBin />
       <RecordWall />
       <WallpaperSamples />
 
@@ -82,7 +81,7 @@ export function Suite() {
       {/* storage room 2301 */}
       <StorageDoor />
       <StorageCloset />
-      <SteamerPoster />
+      <LoneliestHousePrint />
       <Safe x={SAFE_AT.x} z={SAFE_AT.z} />
     </Floor>
 

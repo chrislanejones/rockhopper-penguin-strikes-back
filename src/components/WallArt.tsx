@@ -6,7 +6,7 @@ import { BZ, CLO, CR, HALF, PH, RX0, SOUTH_WALL, V } from '../scene/constants'
 import { calendarPaperTex, gatekeeperPlateTex, iitsPosterTex } from '../textures/calendar'
 import { agreementPlateTex, olivaPlateTex } from '../textures/b2'
 import {
-  iitsBannerTex, steamerPosterTex,
+  iitsBannerTex, loneliestPaperTex,
 } from '../textures/island'
 import { buildingPlaqueTex } from '../textures/signage'
 import { Panel } from './props/primitives'
@@ -140,14 +140,22 @@ export function IitsBanner() {
 }
 
 /**
- * The old steamer poster, big, on the end wall of the storage room.
+ * The loneliest house in the world, big, on the end wall of the storage room.
  *
  * The strip room ends in thirteen feet of blank plaster you walk straight at,
- * which is the one wall in the building worth a full-size poster. Whoever put
- * it up is as long gone as the steamship line.
+ * which is the one wall in the building worth a full-size print. Somebody
+ * taped up Elliðaey — one hunting lodge on a green Icelandic island — as a
+ * mosaic, with the caption doing the joke: it is still one more building than
+ * Inaccessible has.
  */
-export function SteamerPoster() {
-  const art = steamerPosterTex()
+export function LoneliestHousePrint() {
+  const art = useTexture('/textures/loneliest-house.webp')
+  art.colorSpace = THREE.SRGBColorSpace
+  art.anisotropy = 8
+  const paper = useMemo(
+    () => new THREE.MeshStandardMaterial({ map: loneliestPaperTex(), roughness: 0.85 }),
+    [],
+  )
   const m = useMemo(
     () => new THREE.MeshStandardMaterial({ map: art, roughness: 0.85 }),
     [art],
@@ -157,18 +165,22 @@ export function SteamerPoster() {
     [],
   )
 
-  const w = 5.2
-  // 620 x 799.
-  const h = w * (799 / 620)
+  // The sheet is 5.4 x 3.85 ft, drawn at 100 px a foot; the mosaic (648 x 360)
+  // sits 0.1 in from the top and the sides, the caption fills the rest.
+  const w = 5.4
+  const h = 3.85
+  const pw = 5.2
+  const ph = pw * (360 / 648)
   const x = (CLO.x0 + CLO.x1) / 2
-  // Hung to read from the aisle, not from a ladder: at eye height the top
-  // used to run up into the joists and the duct crossed the headline.
-  const y = h / 2 + 0.8
+  // Hung to read from the aisle, not from a ladder.
+  const y = 4.6
   const z = CLO.z0 + 0.06
+  const py = y + h / 2 - 0.1 - ph / 2
 
   return (
     <>
-      <Panel size={[w, h]} material={m} position={[x, y, z]} />
+      <Panel size={[w, h]} material={paper} position={[x, y, z]} />
+      <Panel size={[pw, ph]} material={m} position={[x, py, z + 0.012]} />
       {(
         [
           [1, 1],
@@ -181,7 +193,7 @@ export function SteamerPoster() {
           key={i}
           size={[0.5, 0.22]}
           material={tape}
-          position={[x + (sx * (w - 0.4)) / 2, y + (sy * (h - 0.14)) / 2, z + 0.01]}
+          position={[x + (sx * (w - 0.4)) / 2, y + (sy * (h - 0.14)) / 2, z + 0.02]}
           rotation={[0, 0, sx * sy * 0.5]}
         />
       ))}

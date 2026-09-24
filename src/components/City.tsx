@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { GROUND_Y } from '../scene/constants'
 import { winTexture } from '../textures/outside'
 import { inRiver, onGarageBlock, snapToBlock, underHighway } from '../scene/city'
-import { LOTTERY } from './LotteryTower'
+import { WALKIE_TALKIE } from './WalkieTalkie'
 
 const HAZE = new THREE.Color(0x9fb0bf)
 
@@ -55,9 +55,9 @@ function useTowers(): Tower[] {
       if (underHighway(z, Math.max(w, d))) continue
       if (onGarageBlock(x, z, Math.max(w, d))) continue
 
-      // Give the Lottery building room, and keep the sight line to it clear.
-      if (Math.hypot(x - LOTTERY.x, z - LOTTERY.z) < 160) continue
-      if (z < 0 && z > LOTTERY.z - 40 && Math.abs(x) < 130) continue
+      // Give the Walkie-Talkie room, and keep the sight line to it clear.
+      if (Math.hypot(x - WALKIE_TALKIE.x, z - WALKIE_TALKIE.z) < 160) continue
+      if (z < 0 && z > WALKIE_TALKIE.z - 40 && Math.abs(x) < 130) continue
 
       const tall = Math.random() < 0.12
       const h = tall ? 380 + Math.random() * 320 : 60 + Math.random() * 300

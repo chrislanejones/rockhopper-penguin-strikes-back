@@ -159,92 +159,20 @@ export const iitsBannerTex = lazy(() =>
   }),
 )
 
-/** The Island Lottery's box sign, square, lit from inside. */
-export const lotterySignTex = lazy(() =>
-  canvasTex(512, 512, (g, w, h) => {
-    g.fillStyle = '#ffffff'
+/**
+ * The paper the loneliest-house mosaic is taped to, 540 x 385: blank where the
+ * picture goes, the caption along the bottom.
+ */
+export const loneliestPaperTex = lazy(() =>
+  canvasTex(540, 385, (g, w, h) => {
+    g.fillStyle = '#f4f1e8'
     g.fillRect(0, 0, w, h)
-    g.fillStyle = '#c8102e'
-    g.beginPath()
-    g.arc(w / 2, h * 0.4, 150, 0, 7)
-    g.fill()
-    // a star in the ball
-    g.fillStyle = '#ffd23f'
-    g.beginPath()
-    for (let i = 0; i < 10; i++) {
-      const r = i % 2 ? 44 : 110
-      const a = -Math.PI / 2 + (i * Math.PI) / 5
-      const x = w / 2 + Math.cos(a) * r
-      const y = h * 0.4 + Math.sin(a) * r
-      if (i === 0) g.moveTo(x, y)
-      else g.lineTo(x, y)
-    }
-    g.fill()
-    g.fillStyle = NAVY
     g.textAlign = 'center'
-    g.font = 'bold 58px sans-serif'
-    g.fillText('ISLAND', w / 2, h * 0.84)
-    g.font = 'bold 46px sans-serif'
-    g.fillText('LOTTERY', w / 2, h * 0.95)
-  }),
-)
-
-/** Old steamship-line poster for the storage-room wall. 620 x 799. */
-export const steamerPosterTex = lazy(() =>
-  canvasTex(620, 799, (g, w, h) => {
-    g.fillStyle = '#efe2c2'
-    g.fillRect(0, 0, w, h)
-    // sunset sky
-    const sky = g.createLinearGradient(0, 120, 0, 520)
-    sky.addColorStop(0, '#e98a3c')
-    sky.addColorStop(1, '#f6d58e')
-    g.fillStyle = sky
-    g.fillRect(30, 130, w - 60, 400)
-    g.fillStyle = '#fbe9b5'
-    g.beginPath()
-    g.arc(w * 0.7, 420, 70, 0, 7)
-    g.fill()
-    // island on the horizon
-    plateau(g, 60, 470, 300, 130, '#5a3b3b')
-    // sea
-    g.fillStyle = '#1f4f6e'
-    g.fillRect(30, 470, w - 60, 200)
-    g.fillStyle = 'rgba(251,233,181,.5)'
-    for (let i = 0; i < 6; i++) g.fillRect(w * 0.55, 486 + i * 22, 140 - i * 16, 4)
-    // the steamer
-    g.fillStyle = '#1b1b1b'
-    g.beginPath()
-    g.moveTo(170, 580)
-    g.lineTo(470, 580)
-    g.lineTo(440, 620)
-    g.lineTo(190, 620)
-    g.fill()
-    g.fillStyle = '#f2ead6'
-    g.fillRect(230, 548, 180, 32)
-    g.fillStyle = '#c8102e'
-    g.fillRect(290, 500, 30, 48)
-    g.fillRect(340, 500, 30, 48)
-    g.fillStyle = '#1b1b1b'
-    g.fillRect(290, 500, 30, 10)
-    g.fillRect(340, 500, 30, 10)
-    // lettering
-    g.textAlign = 'center'
-    g.fillStyle = '#7a1f1f'
-    g.font = 'bold 34px Georgia, serif'
-    g.fillText('VISIT', w / 2, 62)
-    g.font = 'bold 50px Georgia, serif'
-    g.fillText('INACCESSIBLE', w / 2, 112)
-    g.fillStyle = '#1f3b57'
-    g.font = 'bold 44px Georgia, serif'
-    g.fillText('BY STEAMER', w / 2, 718)
-    g.font = 'italic 22px Georgia, serif'
-    g.fillText('from Cape Town, twelve days, weather permitting', w / 2, 752)
-    g.font = '14px Georgia, serif'
-    g.fillText('Landing not guaranteed', w / 2, 778)
-    // age
-    for (let i = 0; i < 900; i++) {
-      g.fillStyle = `rgba(110,80,40,${Math.random() * 0.08})`
-      g.fillRect(Math.random() * w, Math.random() * h, 2 + Math.random() * 6, 2)
-    }
+    g.fillStyle = '#1f2a36'
+    g.font = 'bold 24px Georgia, serif'
+    g.fillText('THE LONELIEST HOUSE IN THE WORLD', w / 2, 334)
+    g.fillStyle = '#5a6470'
+    g.font = 'italic 16px Georgia, serif'
+    g.fillText('Elliðaey, Iceland. Still one more building than Inaccessible.', w / 2, 362)
   }),
 )

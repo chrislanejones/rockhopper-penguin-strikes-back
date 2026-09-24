@@ -5,7 +5,7 @@ import { GROUND_Y } from '../scene/constants'
 import {
   CITY_EXTENT, DECK, GARAGES, HWY as HWY_LAYOUT, ROAD_W, STREET_LINES, inRiver, riverGap,
 } from '../scene/city'
-import { LOTTERY } from './LotteryTower'
+import { WALKIE_TALKIE } from './WalkieTalkie'
 
 /**
  * What the grid needs before it reads as a city rather than a field of boxes:
@@ -65,9 +65,9 @@ function useCrossings(): Crossing[] {
         const [g0, g1] = gap
         if (g1 - g0 > 420) continue
         if (g0 <= -CITY_EXTENT + APPROACH || g1 >= CITY_EXTENT - APPROACH) continue
-        // The Lottery building is hand-placed and straddles the street at
+        // The Walkie-Talkie is hand-placed and straddles the street at
         // x = 0; an approach up that line would climb straight through it.
-        if (Math.abs(line - (alongX ? LOTTERY.z : LOTTERY.x)) < 120) continue
+        if (Math.abs(line - (alongX ? WALKIE_TALKIE.z : WALKIE_TALKIE.x)) < 120) continue
         all.push({ alongX, line, g0, g1 })
       }
     }
@@ -248,7 +248,7 @@ function useRamps(): RampPart[] {
 /**
  * Two silhouettes that make the skyline London rather than anywhere.
  *
- * The Lottery building is the near one and stays exactly where `LotteryTower`
+ * The Walkie-Talkie is the near one and stays exactly where `WalkieTalkie`
  * puts it; these two stand well clear of it, clear of the sight line straight
  * out of the glass, and off the expressway's line at z = -550.
  */

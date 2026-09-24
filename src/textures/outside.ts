@@ -63,30 +63,28 @@ export const groundTex = lazy(() =>
   ),
 )
 
-/** Ribbon glazing for the Lottery tower — banded spandrel with lit floors. */
-export const lotteryFacade = () =>
+/**
+ * The Walkie-Talkie's skin: glass behind close-set vertical aluminum fins,
+ * with a faint line at every floor. One tile is 16 ft square.
+ */
+export const walkieFacade = () =>
   canvasTex(256, 256, (g, w, h) => {
-    g.fillStyle = '#8fb8d8'
+    g.fillStyle = '#9dbbd3'
     g.fillRect(0, 0, w, h)
-    for (let y = 0; y < h; y += 32) {
-      g.fillStyle = '#2c3a48'
-      g.fillRect(0, y, w, 9)
-      g.fillStyle = 'rgba(255,255,255,.35)'
-      g.fillRect(0, y + 9, w, 2)
+    // floors, every 4 ft
+    for (let y = 0; y < h; y += 64) {
+      g.fillStyle = 'rgba(40,52,66,.35)'
+      g.fillRect(0, y, w, 4)
     }
-    for (let x = 0; x < w; x += 64) {
-      g.fillStyle = 'rgba(30,40,55,.45)'
-      g.fillRect(x, 0, 3, h)
-    }
-    for (let y = 11; y < h; y += 32) {
-      for (let x = 6; x < w; x += 64) {
-        if (Math.random() > 0.55) {
-          g.fillStyle = 'rgba(255,240,200,.35)'
-          g.fillRect(x, y, 55, 20)
-        }
-      }
+    // the fins, pale and close together
+    for (let x = 0; x < w; x += 16) {
+      g.fillStyle = '#d9dee4'
+      g.fillRect(x, 0, 4, h)
+      g.fillStyle = 'rgba(30,40,55,.35)'
+      g.fillRect(x + 4, 0, 2, h)
     }
   })
+
 
 /** The sky: a plain vertical gradient, painted inside a very large sphere. */
 export const SKY_VERT = /* glsl */ `
