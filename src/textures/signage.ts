@@ -635,9 +635,9 @@ export const sodaFrontTex = lazy(() =>
     g.fillStyle = '#f4ecd8'
     g.font = 'bold 25px Georgia, serif'
     g.textAlign = 'center'
-    g.fillText('OLD DOMINION', w / 2, 76)
+    g.fillText('ROCKINGHAM', w / 2, 76)
     g.font = 'bold 40px Georgia, serif'
-    g.fillText('COLA', w / 2, 120)
+    g.fillText('SODA', w / 2, 120)
 
     // a can, drawn big, because that is what these machines do
     g.fillStyle = '#c8102e'
@@ -653,7 +653,7 @@ export const sodaFrontTex = lazy(() =>
     g.fill()
     g.fillStyle = '#f4ecd8'
     g.font = 'bold 15px Georgia, serif'
-    g.fillText('COLA', w / 2, 242)
+    g.fillText('SODA', w / 2, 242)
 
     g.fillStyle = '#f4ecd8'
     g.font = 'bold 17px sans-serif'
