@@ -1,0 +1,913 @@
+:root {
+  color-scheme: dark;
+  font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+canvas {
+  display: block;
+}
+
+.hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  color: #eee;
+}
+
+/* the car is dark between floors */
+.blackout {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.blackout.on {
+  opacity: 1;
+}
+
+.crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.8;
+  box-shadow: 0 0 3px #000;
+}
+
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  background: rgba(20, 22, 26, 0.72);
+  padding: 8px 14px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.hint.show {
+  opacity: 1;
+}
+
+/* over the watch, for the one page of it that talks */
+.hint.over {
+  z-index: 1;
+}
+
+/* who is talking, in front of the line: her in the watch's green, him in amber */
+.hint-who {
+  margin-right: 0.7em;
+  font-size: 0.82em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8cffae;
+}
+
+.hint-who[data-who='him'] {
+  color: #ffcf7a;
+}
+
+.start {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 12, 16, 0.82);
+  color: #eee;
+  cursor: pointer;
+}
+
+.start .card {
+  max-width: 460px;
+  padding: 32px 36px;
+  background: #1b1e24;
+  border: 1px solid #333;
+  border-radius: 6px;
+  line-height: 1.55;
+}
+
+.start h1 {
+  margin: 0 0 6px;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+}
+
+
+/*
+  The legend: keys down the left, one line each on the right. A grid, not
+  prose — the old card was four paragraphs with the keys buried in them.
+*/
+.start .legend {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 9px 18px;
+  align-items: center;
+  margin: 14px 0 4px;
+  font-size: 14px;
+}
+.start .keys {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.start .does {
+  color: #c3c9d0;
+}
+.start .or {
+  color: #6f7a86;
+  font-size: 12px;
+  margin: 0 3px;
+}
+
+/*
+  keycap draws the caps. Its own variables are for a light page and it only
+  goes dark on html[data-theme=dark], so the dark set is stated here where the
+  caps will inherit it. Its box is a fixed 20 x 18 — fine for a letter, no
+  good for "Shift" — so the size is overridden and word keys get `wide`.
+*/
+.start {
+  --keycap-text-color: #e8ecf1;
+  --keycap-gradient: linear-gradient(-26.5deg, #2b2f36 0%, #3c414a 100%);
+  --keycap-key-shadow:
+    inset 0 -2px 0 0 #1a1d22,
+    inset 0 0 1px 1px #4a505a,
+    0 2px 2px 0 rgba(0, 0, 0, 0.35);
+  --keycap-key-pressed-shadow:
+    inset 0 -2px 0 0 #1a1d22,
+    inset 0 0 1px 1px #4a505a,
+    0 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+.start kbd {
+  height: 24px;
+  width: 26px;
+  margin: 0;
+  padding: 0 0 2px;
+  font: 600 12px/1 system-ui, sans-serif;
+  letter-spacing: 0.02em;
+}
+.start kbd.wide {
+  width: auto;
+  padding: 0 9px 2px;
+}
+
+.start small {
+  display: block;
+  margin-top: 14px;
+  color: #7a8a99;
+}
+
+/* until the floor is built and its shaders are compiled, the card is a loading bar */
+.start:not(.ready) {
+  cursor: default;
+}
+
+.load {
+  margin-top: 16px;
+}
+
+.load-bar {
+  height: 4px;
+  background: #2a2e36;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.load-fill {
+  height: 100%;
+  background: #7fb0ff;
+  transition: width 0.15s ease-out;
+}
+
+.load small {
+  margin-top: 8px;
+}
+
+.loading {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #0a0c10;
+  color: #7a8a99;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+/*
+  The inventory strip.
+
+  Bottom left, out of the way of the crosshair and the hint line, and only on
+  screen once you are actually carrying something.
+*/
+.inventory {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  min-width: 168px;
+  background: rgba(20, 22, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 8px 10px 9px;
+  font-size: 13px;
+}
+
+.inventory-title {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 6px;
+}
+
+.inventory .item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.inventory .item-glyph {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.inventory .item-name {
+  opacity: 0.9;
+}
+
+.inventory .item.in-hand .item-glyph {
+  background: rgba(255, 216, 140, 0.16);
+}
+
+.inventory .item-note {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.45;
+}
+
+/*
+  The watch.
+
+  T brings her wrist up and this comes with it: a GoldenEye watch, black case,
+  ring of coloured segments, green screen, three pages. It is a DOM overlay
+  rather than a texture on the 3 mm dial in her cuff, because the screen is
+  small text and small text on a cylinder is a smudge — the camera zoom in
+  Player.tsx is what ties the two together.
+
+  Everything inside is sized off --wu, one percent of whichever window
+  dimension is governing the case, so the whole thing scales as one drawing.
+*/
+.watch {
+  --wu: min(1vh, 1vw);
+  --lcd: #8cffae;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.26s ease, visibility 0s 0.26s;
+}
+
+.watch.up {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease, visibility 0s;
+}
+
+/* the office goes down behind it, the way it does when you look at your wrist */
+.watch::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 60% at 50% 50%, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.82));
+}
+
+/* the case rises into frame from the bottom right, wrist-first */
+.watch-case {
+  position: relative;
+  width: min(78vh, 78vw);
+  aspect-ratio: 1;
+  transform: translate(9%, 30%) scale(0.4) rotate(-14deg);
+  transition: transform 0.34s cubic-bezier(0.16, 0.84, 0.3, 1);
+  filter: drop-shadow(0 calc(var(--wu) * 3) calc(var(--wu) * 4) rgba(0, 0, 0, 0.6));
+}
+
+.watch.up .watch-case {
+  transform: none;
+}
+
+.watch-bezel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* the strap runs off the top and bottom of the viewBox */
+  overflow: visible;
+}
+
+.wstrap {
+  fill: #14161a;
+  stroke: #2b3038;
+}
+
+.wpush {
+  fill: #9aa2ad;
+}
+
+.wcase-edge {
+  fill: none;
+  stroke: #4a515c;
+  stroke-width: 2;
+}
+
+.wscreen-well {
+  fill: #03150a;
+  stroke: rgba(0, 0, 0, 0.9);
+  stroke-width: 6;
+}
+
+/*
+  The screen: round, on every page. A circle of r=138 inside the r=142 well
+  (whose stroke comes in to 139), which is 15.5% in from each side of the case.
+*/
+.watch-screen {
+  position: absolute;
+  inset: 15.5%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(120% 100% at 50% 30%, #0f6030 0%, #07401d 48%, #04230f 100%);
+  box-shadow:
+    inset 0 0 calc(var(--wu) * 3) rgba(0, 0, 0, 0.75),
+    inset 0 0 0 2px rgba(140, 255, 174, 0.14),
+    0 0 calc(var(--wu) * 2.4) rgba(60, 255, 120, 0.16);
+  color: var(--lcd);
+  font-family: 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+  font-size: calc(var(--wu) * 1.85);
+  line-height: 1.35;
+  text-shadow: 0 0 calc(var(--wu) * 0.5) rgba(80, 255, 130, 0.5);
+}
+
+/*
+  The card in the middle, for every page but the dial: a list of keys set in a
+  circle loses its corners. In screen units (276 across) it is 212 square with
+  32 corners, so the far corner lands at r=136.6, inside the glass: that is
+  11.6% in, and 15% rounded.
+*/
+.wpanel {
+  position: absolute;
+  inset: 11.6%;
+  border-radius: 15%;
+  /* room between the card's edge and what is on it: the corners are round,
+     and figures set hard into a round corner look like they are falling out */
+  padding: calc(var(--wu) * 2.3) calc(var(--wu) * 2.4);
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(140, 255, 174, 0.24);
+  box-shadow: inset 0 0 calc(var(--wu) * 1.6) rgba(0, 0, 0, 0.45);
+  transition: inset 0.24s ease, border-radius 0.24s ease;
+}
+
+.wpanel > * {
+  flex: 1;
+  min-height: 0;
+}
+
+/* the dial has the whole glass. No card, no title, no dots: it is a watch
+   face, and the words above the 6 say how to get off it */
+.watch-screen.face .wpanel {
+  inset: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.watch-screen.face .wtop,
+.watch-screen.face .wbot {
+  display: none;
+}
+
+/* the slivers of glass above and below the card, 11.6% of the screen each:
+   the page's name in the top one, the dots and the maker's mark in the other */
+.wtop,
+.wbot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 11.6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82em;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+.wtop {
+  top: 0;
+  /* sat low in its sliver: the glass is narrow and dark right at the rim */
+  padding-top: 1.1em;
+  color: #d6ffe4;
+}
+
+.wbot {
+  bottom: 0;
+  padding-bottom: 1em;
+  gap: 0.55em;
+}
+
+.wdots {
+  display: flex;
+  gap: 0.5em;
+}
+
+.wmodel {
+  font-size: 0.8em;
+  opacity: 0.5;
+}
+
+.wdot {
+  width: calc(var(--wu) * 0.7);
+  height: calc(var(--wu) * 0.7);
+  border-radius: 50%;
+  border: 1px solid rgba(140, 255, 174, 0.5);
+}
+
+.wdot.on {
+  background: var(--lcd);
+  box-shadow: 0 0 calc(var(--wu) * 0.8) rgba(140, 255, 174, 0.8);
+}
+
+/* the glass: scanlines, and a highlight across one corner */
+.wscan,
+.wglass {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.wscan {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.16) 0 1px,
+    rgba(0, 0, 0, 0) 1px 3px
+  );
+}
+
+.wglass {
+  background: linear-gradient(148deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0) 44%);
+}
+
+/* --- page one: the dial, filling the screen --- */
+
+.wdial {
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+  filter: drop-shadow(0 0 calc(var(--wu) * 0.4) rgba(80, 255, 130, 0.45));
+}
+
+/* the minute track: minutes, hours, quarters */
+.wdial .wm {
+  stroke: rgba(140, 255, 174, 0.45);
+  stroke-width: 0.9;
+}
+
+.wdial .wh {
+  stroke: rgba(140, 255, 174, 0.75);
+  stroke-width: 2.2;
+}
+
+.wdial .wq {
+  stroke: var(--lcd);
+  stroke-width: 3.4;
+}
+
+/* SVG text: font sizes are in dial units, 200 to the width of the dial */
+.wnum,
+.wdate-day,
+.wzone,
+.whint {
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.wnum {
+  fill: #ccffdc;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* the date window: a lighter pane let into the dial, dark figures on it */
+.wdate-win {
+  fill: #b9f7cc;
+  stroke: rgba(0, 0, 0, 0.55);
+  stroke-width: 1.2;
+}
+
+.wdate-day {
+  fill: #04230f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.wzone {
+  fill: #d6ffe4;
+  font-size: 5.6px;
+  letter-spacing: 0.08em;
+}
+
+.whint {
+  fill: var(--lcd);
+  font-size: 4.2px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.whand {
+  stroke: var(--lcd);
+  stroke-linecap: round;
+}
+
+.whand.hr {
+  stroke-width: 5;
+}
+
+.whand.mn {
+  stroke-width: 3.2;
+}
+
+.wsec {
+  stroke: #ff7a66;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+}
+
+.wpin {
+  fill: #ff7a66;
+}
+
+/* --- page two: status --- */
+
+.wstat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65em;
+}
+
+.wtime {
+  font-size: calc(var(--wu) * 4.6);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ccffdc;
+  line-height: 1.05;
+}
+
+.wsecs {
+  font-size: 0.5em;
+  opacity: 0.75;
+}
+
+.wmer {
+  font-size: 0.34em;
+  letter-spacing: 0.16em;
+  margin-left: 0.6em;
+  opacity: 0.8;
+}
+
+.wdate {
+  letter-spacing: 0.14em;
+  color: #d6ffe4;
+}
+
+/* the address line, on one line: a watch with a hyphenated street address on
+   it is silly */
+.wwhere {
+  font-size: 0.82em;
+  letter-spacing: 0.04em;
+  opacity: 0.68;
+}
+
+.wstatus {
+  margin-top: 0.3em;
+  padding-top: 0.5em;
+  border-top: 1px solid rgba(140, 255, 174, 0.22);
+}
+
+.wstatus-title {
+  letter-spacing: 0.14em;
+  color: #d6ffe4;
+  margin-bottom: 0.45em;
+}
+
+.wobj {
+  font-size: 0.92em;
+  opacity: 0.85;
+  margin-top: 0.3em;
+}
+
+.wobj.done {
+  color: #6fe08f;
+  opacity: 0.6;
+}
+
+.wobj.hands {
+  margin-top: 0.6em;
+  opacity: 0.65;
+}
+
+/* --- page three: September --- */
+
+.wcal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.wmonth {
+  letter-spacing: 0.2em;
+  color: #d6ffe4;
+  margin-bottom: 0.55em;
+}
+
+.wgrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: calc(var(--wu) * 0.5) calc(var(--wu) * 0.2);
+  text-align: center;
+  font-size: 0.88em;
+}
+
+.wdow {
+  opacity: 0.5;
+  letter-spacing: 0.04em;
+}
+
+.wday {
+  width: 1.9em;
+  height: 1.9em;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+/* today, the way the wall calendar has it: filled red, day two ringed */
+.wday.today {
+  background: #c8102e;
+  color: #fff;
+  opacity: 1;
+  text-shadow: none;
+}
+
+.wday.next {
+  box-shadow: inset 0 0 0 1px #ff8a7a;
+  color: #ffb3a8;
+  opacity: 1;
+}
+
+.wevents {
+  margin-top: 0.8em;
+  padding-top: 0.5em;
+  border-top: 1px solid rgba(140, 255, 174, 0.22);
+  display: grid;
+  gap: 0.6em;
+  font-size: 0.78em;
+}
+
+.wevent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7em;
+}
+
+/* a line too long for the glass is cut off at the edge, never wrapped: the
+   page has room for three events and no more */
+.wwhat {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wwhen {
+  color: rgba(140, 255, 174, 0.62);
+  white-space: nowrap;
+}
+
+.wevent.now .wwhat {
+  color: #ffe08a;
+}
+
+.wevent.now em {
+  font-style: normal;
+  color: #ffb45a;
+  animation: wblink 1.5s steps(1, end) infinite;
+}
+
+.wevent.dim {
+  opacity: 0.5;
+}
+
+@keyframes wblink {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+/* --- page four: the keys --- */
+
+.wkeys {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.95em 1em;
+  align-content: start;
+  /* small enough that every line of it stays one line: a page of shortcuts
+     that wraps is a page you read twice */
+  font-size: 0.78em;
+}
+
+.wkey {
+  text-align: center;
+  white-space: nowrap;
+  padding: 0.05em 0.5em;
+  border: 1px solid rgba(140, 255, 174, 0.35);
+  border-radius: 3px;
+  color: #d6ffe4;
+}
+
+.wdoes {
+  opacity: 0.78;
+}
+
+/* --- page five: the lift camera --- */
+
+/* the picture runs to the card's edges; the round corners crop it */
+.watch-screen.feed .wpanel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.wfeed {
+  position: relative;
+}
+
+/* under the canvas, which is see-through until the first picture lands on it */
+.wfeed-wait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.8em;
+  letter-spacing: 0.3em;
+  opacity: 0.55;
+  animation: wblink 1.2s steps(1, end) infinite;
+}
+
+.wfeed canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* the stamps a security feed has in its corners, in off the round ones */
+.wfeed-tag {
+  position: absolute;
+  font-size: 0.7em;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  color: #d6ffe4;
+  text-shadow: 0 0 2px #000, 0 0 4px #000;
+}
+
+.wfeed-tag.rec {
+  top: 9%;
+  left: 10%;
+}
+
+.wfeed-tag.rec i {
+  font-style: normal;
+  color: #ff5a4a;
+  animation: wblink 1.5s steps(1, end) infinite;
+}
+
+.wfeed-tag.cam {
+  top: 9%;
+  right: 10%;
+}
+
+.wfeed-tag.car {
+  bottom: 9%;
+  left: 10%;
+}
+
+.wfeed-tag.clock {
+  bottom: 9%;
+  right: 10%;
+}
+
+/* --- the three buttons on the case --- */
+
+.wpad {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  background: linear-gradient(#2b313a, #14171c);
+  border: 1px solid #4a515c;
+  color: #9fb0c2;
+  font: 600 calc(var(--wu) * 1.7) / 1 system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.08s, background 0.12s, color 0.12s, box-shadow 0.12s;
+}
+
+.watch:not(.up) .wpad {
+  pointer-events: none;
+}
+
+.wpad.left,
+.wpad.right {
+  top: 50%;
+  width: calc(var(--wu) * 8);
+  height: calc(var(--wu) * 8);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.wpad.left {
+  left: 0.6%;
+}
+
+.wpad.right {
+  right: 0.6%;
+}
+
+.wpad.exit {
+  left: 50%;
+  bottom: -1.5%;
+  transform: translateX(-50%);
+  padding: calc(var(--wu) * 0.9) calc(var(--wu) * 2.4);
+  border-radius: 999px;
+  font-size: calc(var(--wu) * 1.4);
+}
+
+.wpad.exit b {
+  font-size: 0.85em;
+  opacity: 0.65;
+  margin-left: 0.4em;
+}
+
+.wpad.on {
+  background: linear-gradient(#1d5c33, #0c3a1e);
+  border-color: rgba(140, 255, 174, 0.7);
+  color: #d6ffe4;
+  box-shadow: 0 0 calc(var(--wu) * 1.6) rgba(80, 255, 130, 0.45);
+}
+
+.wpad.left.on,
+.wpad.right.on {
+  transform: translateY(-50%) scale(0.93);
+}
+
+.wpad.exit.on {
+  transform: translateX(-50%) scale(0.95);
+}
