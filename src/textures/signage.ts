@@ -318,6 +318,23 @@ export const wallpaperLabelTex = lazy(() =>
   }),
 )
 
+/** The brass label on the front of the Queen Mary's Peak model. */
+export const peakLabelTex = lazy(() =>
+  canvasTex(320, 60, (g, w, h) => {
+    g.fillStyle = '#b08d3c'
+    g.fillRect(0, 0, w, h)
+    g.strokeStyle = '#6d5620'
+    g.lineWidth = 2
+    g.strokeRect(4, 4, w - 8, h - 8)
+    g.fillStyle = '#3a2a10'
+    g.textAlign = 'center'
+    g.font = 'bold 19px Georgia, serif'
+    g.fillText('QUEEN MARY’S PEAK', w / 2, 27)
+    g.font = '12px Georgia, serif'
+    g.fillText('2,062 m  ·  Tristan da Cunha', w / 2, 46)
+  }),
+)
+
 /**
  * Taped over the coffee maker: why the coffee runs out, and when it comes
  * back. The joke is that the office takes deliveries the way Tristan da

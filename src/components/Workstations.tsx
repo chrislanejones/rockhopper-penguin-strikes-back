@@ -9,7 +9,7 @@ import {
   StackPaper, Trophy,
 } from './props/Furniture'
 import {
-  a11yPosterTex, almanacTex, diplomaTex, npsPosterTex, stickyTex,
+  a11yPosterTex, almanacTex, diplomaTex, npsPosterTex, peakLabelTex, stickyTex,
   texasTex, thesisCoverTex,
 } from '../textures/signage'
 import { Box, Panel } from './props/primitives'
@@ -731,6 +731,70 @@ function Chris() {
  * Whose desk it is has not been settled, so there is no nameplate on the
  * panel yet and the screen is the intranet rather than anybody's mail.
  */
+/** Half-section of the volcano, turned on a lathe: steep top, crater dip. */
+const PEAK_PROFILE = [
+  [0.3, 0],
+  [0.26, 0.035],
+  [0.2, 0.095],
+  [0.13, 0.19],
+  [0.075, 0.28],
+  [0.048, 0.33],
+  [0.034, 0.326],
+  [0, 0.316],
+].map(([r, y]) => new THREE.Vector2(r, y))
+
+/** The snow cap: the same slope from two-thirds up, a hair proud of the rock. */
+const SNOW_PROFILE = [
+  [0.108, 0.24],
+  [0.079, 0.283],
+  [0.052, 0.334],
+  [0.037, 0.33],
+  [0, 0.32],
+].map(([r, y]) => new THREE.Vector2(r, y))
+
+/**
+ * Queen Mary's Peak, the volcano Tristan da Cunha is built round, as a desk
+ * model: a turned cone on a painted sea, snow on the summit and the crater
+ * lake in the top. Every new starter gets one; this one is still in the
+ * spot the welcome pack put it.
+ */
+function QueenMarysPeak({ x, z, ry = 0 }: { x: number; z: number; ry?: number }) {
+  const peak = useMemo(() => new THREE.LatheGeometry(PEAK_PROFILE, 28), [])
+  const snow = useMemo(() => new THREE.LatheGeometry(SNOW_PROFILE, 28), [])
+  const rock = useMemo(() => M(0x5d6b45, { roughness: 0.9 }), [])
+  const white = useMemo(() => M(0xf4f6f8, { roughness: 0.6 }), [])
+  const sea = useMemo(() => M(0x2c5d8f, { roughness: 0.4 }), [])
+  const lake = useMemo(() => M(0x3f7fb0, { roughness: 0.15 }), [])
+  const wood = useMemo(() => M(0x6b4a2b, { roughness: 0.7 }), [])
+  const label = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({ map: peakLabelTex(), roughness: 0.35, metalness: 0.6 }),
+    [],
+  )
+
+  return (
+    <Pickable label="Queen Mary's Peak">
+      <group position={[x, 0, z]} rotation={[0, ry, 0]}>
+        <mesh position={[0, 0.04, 0]} material={wood} castShadow receiveShadow>
+          <boxGeometry args={[0.72, 0.08, 0.5]} />
+        </mesh>
+        <mesh position={[0, 0.082, 0]} rotation={[-Math.PI / 2, 0, 0]} material={sea}>
+          <planeGeometry args={[0.68, 0.46]} />
+        </mesh>
+        <mesh geometry={peak} material={rock} position={[0, 0.08, 0]} castShadow />
+        <mesh geometry={snow} material={white} position={[0, 0.08, 0]} />
+        <mesh position={[0, 0.08 + 0.327, 0]} rotation={[-Math.PI / 2, 0, 0]} material={lake}>
+          <circleGeometry args={[0.028, 16]} />
+        </mesh>
+        {/* the brass label on the front edge of the plinth */}
+        <mesh position={[0, 0.04, -0.252]} rotation={[0, Math.PI, 0]} material={label}>
+          <planeGeometry args={[0.48, 0.07]} />
+        </mesh>
+      </group>
+    </Pickable>
+  )
+}
+
 function Newcomer() {
   return (
     <Workstation x={BX2 + 1.5} z={1} ry={-V} w={6.5} d={2.6} chair={mat.blue}>
@@ -759,6 +823,7 @@ function Newcomer() {
       <Keyboard x={0} z={-0.5} />
       <Pickable label="mug"><Mug x={2.4} z={-0.4} material={mat.blue} /></Pickable>
       <Plant x={-2.6} z={0.4} s={0.85} />
+      <QueenMarysPeak x={2.35} z={0.55} ry={0.3} />
     </Workstation>
   )
 }
