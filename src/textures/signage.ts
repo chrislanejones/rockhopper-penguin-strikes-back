@@ -318,6 +318,70 @@ export const wallpaperLabelTex = lazy(() =>
   }),
 )
 
+/**
+ * Taped over the coffee maker: why the coffee runs out, and when it comes
+ * back. The joke is that the office takes deliveries the way Tristan da
+ * Cunha does — by the boat from Cape Town, about ten times a year.
+ */
+export const coffeeBoatSignTex = lazy(() =>
+  canvasTex(360, 460, (g, w, h) => {
+    g.fillStyle = '#fbfaf5'
+    g.fillRect(0, 0, w, h)
+    g.fillStyle = '#b8281e'
+    g.fillRect(0, 0, w, 58)
+    g.fillStyle = '#ffffff'
+    g.textAlign = 'center'
+    g.font = 'bold 30px Helvetica, Arial, sans-serif'
+    g.fillText('COFFEE NOTICE', w / 2, 40)
+
+    g.fillStyle = '#1c1a16'
+    g.font = 'bold 20px Helvetica, Arial, sans-serif'
+    g.fillText('The coffee comes by boat.', w / 2, 96)
+    g.font = '15px Helvetica, Arial, sans-serif'
+    ;[
+      'Like everything on Tristan da Cunha,',
+      'it comes in on the ship from Cape Town,',
+      'about ten times a year,',
+      'weather permitting.',
+    ].forEach((t, i) => g.fillText(t, w / 2, 128 + i * 21))
+
+    g.fillStyle = '#b8281e'
+    g.font = 'bold 19px Helvetica, Arial, sans-serif'
+    g.fillText('Next boat: five weeks. Maybe.', w / 2, 232)
+
+    g.fillStyle = '#1c1a16'
+    g.font = '14px Helvetica, Arial, sans-serif'
+    g.fillText('The nearest coffee shop is 1,700 miles', w / 2, 266)
+    g.fillText('away. It is also on the boat.', w / 2, 285)
+    g.fillText('Ration accordingly. One scoop, not three.', w / 2, 312)
+
+    // the boat, small, and the swell it is waiting on
+    g.strokeStyle = '#2c5d8f'
+    g.lineWidth = 3
+    g.beginPath()
+    for (let x = 40; x <= w - 40; x += 6) {
+      const y = 386 + Math.sin(x / 11) * 4
+      if (x === 40) g.moveTo(x, y)
+      else g.lineTo(x, y)
+    }
+    g.stroke()
+    g.fillStyle = '#1c1a16'
+    g.beginPath()
+    g.moveTo(w / 2 - 50, 366)
+    g.lineTo(w / 2 + 56, 366)
+    g.lineTo(w / 2 + 40, 384)
+    g.lineTo(w / 2 - 40, 384)
+    g.fill()
+    g.fillRect(w / 2 - 20, 346, 44, 20)
+    g.fillStyle = '#b8281e'
+    g.fillRect(w / 2 + 4, 332, 10, 14)
+
+    g.fillStyle = '#2b4a8a'
+    g.font = 'italic 16px "Segoe Print", "Comic Sans MS", cursive'
+    g.fillText('whoever took the last bag: we know. — Liz', w / 2, h - 30)
+  }),
+)
+
 /** A round biscuit seen from above: a disc, a darker rim, docking holes. */
 function drawBiscuit(g: CanvasRenderingContext2D, cx: number, cy: number, r: number, face: string) {
   g.fillStyle = '#9c6a2e'

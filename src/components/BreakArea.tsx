@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { M, mat } from '../scene/materials'
-import { H, HALF, LX, RX0, TV_STAFF, TV_WEATHER, candela } from '../scene/constants'
+import { H, HALF, LX, RX0, TV_STAFF, TV_WEATHER, V, candela } from '../scene/constants'
 import {
-  biscuitTinLidTex, biscuitTinSideTex, dartboardTex, fridgeFlyerTex, pizzaBoxTex,
+  biscuitTinLidTex, biscuitTinSideTex, coffeeBoatSignTex, dartboardTex, fridgeFlyerTex, pizzaBoxTex,
   sodaFrontTex, squirrelPhotoTex,
 } from '../textures/signage'
 import { drawWeather, slides } from '../textures/screens'
@@ -1656,6 +1656,10 @@ function PodBrewer({ x, y, z }: { x: number; y: number; z: number }) {
  */
 export function BreakArea() {
   const counterTop = useMemo(() => M(0x3a3f45, { roughness: 0.3 }), [])
+  const coffeeSign = useMemo(
+    () => new THREE.MeshStandardMaterial({ map: coffeeBoatSignTex(), roughness: 0.8 }),
+    [],
+  )
   const vinyl = useMemo(
     () =>
       M(0xffffff, {
@@ -1702,6 +1706,13 @@ export function BreakArea() {
       <Box size={[0.4, 2, 10]} material={mat.laminate} position={[EX + 0.2, 6, BZ]} cast={false} />
 
       <CoffeeMaker x={EX + 1.15} z={BZ - 3.2} y={CTOP} />
+      {/* the coffee notice, taped to the splashback over the machine */}
+      <Panel
+        size={[1.2, 1.53]}
+        material={coffeeSign}
+        position={[EX + 0.41, 6.0, BZ - 3.2]}
+        rotation={[0, V, 0.01]}
+      />
       <PodBrewer x={EX + 1.15} z={BZ - 4.4} y={CTOP} />
 
       {/*
