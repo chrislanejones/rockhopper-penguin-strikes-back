@@ -318,141 +318,78 @@ export const wallpaperLabelTex = lazy(() =>
   }),
 )
 
-/** A pretzel, drawn as three overlapping stroked loops. Good enough at any
- *  size you can read the box at. */
-function drawPretzel(
-  g: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  s: number,
-  colour: string,
-) {
-  g.strokeStyle = colour
-  g.lineWidth = 13 * s
-  g.lineCap = 'round'
+/** A round biscuit seen from above: a disc, a darker rim, docking holes. */
+function drawBiscuit(g: CanvasRenderingContext2D, cx: number, cy: number, r: number, face: string) {
+  g.fillStyle = '#9c6a2e'
   g.beginPath()
-  g.arc(cx, cy + 10 * s, 34 * s, 0.08 * Math.PI, 0.92 * Math.PI)
-  g.stroke()
+  g.arc(cx, cy, r, 0, 7)
+  g.fill()
+  g.fillStyle = face
   g.beginPath()
-  g.arc(cx - 22 * s, cy - 14 * s, 22 * s, 0, 7)
-  g.stroke()
-  g.beginPath()
-  g.arc(cx + 22 * s, cy - 14 * s, 22 * s, 0, 7)
-  g.stroke()
+  g.arc(cx, cy, r * 0.88, 0, 7)
+  g.fill()
+  g.fillStyle = 'rgba(90,55,20,.55)'
+  for (let i = 0; i < 7; i++) {
+    const a = (i / 7) * Math.PI * 2
+    g.beginPath()
+    g.arc(cx + Math.cos(a) * r * 0.5, cy + Math.sin(a) * r * 0.5, r * 0.06, 0, 7)
+    g.fill()
+  }
 }
 
 /**
- * Rockhopper Pretzels — the printed front of the carton.
+ * Rockhopper Biscuits — the printed band round the side of the tin.
  *
- * The three faces of the box are drawn separately because a single texture on
- * a BoxGeometry lands on all six sides, which puts the brand name on the top
- * flap and a mirror image of it on the back.
+ * A cylinder's side wraps its map once round, so the brand is printed twice,
+ * half a turn apart, and reads from wherever you stand.
  */
-export const pretzelBoxTex = lazy(() =>
-  canvasTex(200, 300, (g, w, h) => {
+export const biscuitTinSideTex = lazy(() =>
+  canvasTex(1024, 200, (g, w, h) => {
+    g.fillStyle = '#1c2d5a'
+    g.fillRect(0, 0, w, h)
+    g.fillStyle = '#d9a441'
+    g.fillRect(0, 10, w, 5)
+    g.fillRect(0, h - 15, w, 5)
+    g.textAlign = 'center'
+    for (const cx of [w * 0.25, w * 0.75]) {
+      g.fillStyle = '#d9a441'
+      g.font = 'bold 44px Georgia, serif'
+      g.fillText('ROCKHOPPER', cx, 92)
+      g.fillStyle = '#f4ecd8'
+      g.font = 'italic 30px Georgia, serif'
+      g.fillText('Assorted Biscuits', cx, 138)
+      g.font = '15px Georgia, serif'
+      g.fillStyle = '#c9b98f'
+      g.fillText('Baked in London since 1972', cx, 168)
+    }
+    for (const cx of [0, w * 0.5, w]) drawBiscuit(g, cx, h / 2, 46, '#d7a35a')
+  }),
+)
+
+/** The lid of the tin: the brand in a gold ring, and a plate of biscuits. */
+export const biscuitTinLidTex = lazy(() =>
+  canvasTex(512, 512, (g, w, h) => {
     g.fillStyle = '#1c2d5a'
     g.fillRect(0, 0, w, h)
     g.strokeStyle = '#d9a441'
+    g.lineWidth = 10
+    g.beginPath()
+    g.arc(w / 2, h / 2, 236, 0, 7)
+    g.stroke()
     g.lineWidth = 3
-    g.strokeRect(9, 9, w - 18, h - 18)
-
-    g.fillStyle = '#152343'
-    g.fillRect(0, 0, w, 24)
-    g.fillRect(0, h - 42, w, 42)
-
-    g.fillStyle = '#d9a441'
-    g.font = 'bold 16px Georgia, serif'
+    g.beginPath()
+    g.arc(w / 2, h / 2, 218, 0, 7)
+    g.stroke()
+    drawBiscuit(g, w / 2 - 70, h / 2 + 70, 52, '#d7a35a')
+    drawBiscuit(g, w / 2 + 70, h / 2 + 70, 52, '#5a3520')
+    drawBiscuit(g, w / 2, h / 2 + 110, 52, '#e2b36c')
     g.textAlign = 'center'
-    g.fillText('ROCKHOPPER', w / 2, 50)
-    g.fillStyle = '#f4ecd8'
-    g.font = 'bold 32px Georgia, serif'
-    g.fillText('PRETZELS', w / 2, 88)
     g.fillStyle = '#d9a441'
-    g.fillRect(46, 104, w - 92, 2)
-
-    drawPretzel(g, w / 2, 176, 1.15, '#c9902f')
-    // salt
+    g.font = 'bold 54px Georgia, serif'
+    g.fillText('ROCKHOPPER', w / 2, h / 2 - 50)
     g.fillStyle = '#f4ecd8'
-    for (let i = 0; i < 22; i++) {
-      const a = Math.random() * 7
-      const r = 26 + Math.random() * 34
-      g.fillRect(w / 2 + Math.cos(a) * r, 176 + Math.sin(a) * r * 0.8, 3, 3)
-    }
-
-    g.fillStyle = '#f4ecd8'
-    g.font = 'italic 14px Georgia, serif'
-    g.fillText('HARD SOURDOUGH', w / 2, 246)
-    g.font = 'bold 14px sans-serif'
-    g.fillText('FAMILY SIZE', w / 2, h - 22)
-    g.font = '10px sans-serif'
-    g.fillText('NET WT 16 OZ (454 g)', w / 2, h - 8)
-  }),
-)
-
-/** Narrow side panel of the same carton: brand, sideways, and a barcode. */
-export const pretzelSideTex = lazy(() =>
-  canvasTex(80, 300, (g, w, h) => {
-    g.fillStyle = '#1c2d5a'
-    g.fillRect(0, 0, w, h)
-    g.fillStyle = '#152343'
-    g.fillRect(0, 0, w, 24)
-    g.fillRect(0, h - 42, w, 42)
-
-    g.save()
-    g.translate(w / 2, 100)
-    g.rotate(-Math.PI / 2)
-    g.fillStyle = '#d9a441'
-    g.font = 'bold 15px Georgia, serif'
-    g.textAlign = 'center'
-    g.fillText('ROCKHOPPER', 0, 6)
-    g.restore()
-
-    g.fillStyle = '#f4ecd8'
-    g.fillRect(12, h - 118, w - 24, 62)
-    g.fillStyle = '#111'
-    for (let x = 16, i = 0; x < w - 16; i++) {
-      const bw = 1 + (i % 3)
-      g.fillRect(x, h - 112, bw, 48)
-      x += bw + 2
-    }
-  }),
-)
-
-/** Back of the carton — the panel nobody reads, at the size nobody can read. */
-export const pretzelBackTex = lazy(() =>
-  canvasTex(200, 300, (g, w, h) => {
-    g.fillStyle = '#e7ded0'
-    g.fillRect(0, 0, w, h)
-    g.fillStyle = '#1c2d5a'
-    g.fillRect(0, 0, w, 20)
-    g.fillStyle = '#111'
-    g.font = 'bold 15px sans-serif'
-    g.textAlign = 'left'
-    g.fillText('Nutrition Facts', 14, 44)
-    g.fillRect(14, 52, w - 28, 3)
-    g.font = '9px sans-serif'
-    const rows = [
-      'Serving size  8 pretzels (30g)',
-      'Calories  110',
-      'Total Fat  1g',
-      'Sodium  390mg',
-      'Total Carbohydrate  23g',
-      'Protein  3g',
-    ]
-    rows.forEach((r, i) => {
-      g.fillText(r, 14, 72 + i * 15)
-      g.fillStyle = '#b9b2a5'
-      g.fillRect(14, 76 + i * 15, w - 28, 1)
-      g.fillStyle = '#111'
-    })
-    g.font = '8px sans-serif'
-    g.fillStyle = '#555'
-    for (let i = 0; i < 7; i++) {
-      g.fillRect(14, 176 + i * 9, w - 28 - (i % 3) * 22, 3)
-    }
-    g.fillStyle = '#1c2d5a'
-    g.font = 'italic 10px Georgia, serif'
-    g.fillText('Baked in London since 1972', 14, h - 22)
+    g.font = 'italic 34px Georgia, serif'
+    g.fillText('Assorted Biscuits', w / 2, h / 2 - 6)
   }),
 )
 

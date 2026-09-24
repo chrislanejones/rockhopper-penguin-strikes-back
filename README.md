@@ -31,7 +31,7 @@ pnpm typecheck    # just the types
 | `W` `A` `S` `D` | Walk |
 | Mouse | Look |
 | `Shift` | Run |
-| Click | Pick up a mug, the duck, a pretzel, the foam blaster. Click again to set it down |
+| Click | Pick up a mug, the duck, a biscuit, the foam blaster. Click again to set it down |
 | `Shift` + click | Throw whatever is in your hands |
 | Click | Press a button: the lift, the soda machine. Fire the foam blaster |
 | `Shift` + click | With the blaster: put it down |
@@ -84,7 +84,7 @@ Units are feet, everywhere. Eight-foot ceilings and a 2x4 lay-in grid stay whole
 | --- | --- |
 | Main suite | Two cubicle blocks, eight workstations, kanban board, printer, a floor fan in every corner |
 | Break room | 19 x 36 on vinyl: counter, two TVs, ping-pong, soda machine, dartboard |
-| West wall | Two coffee machines, Rockhopper Pretzels, a bottom-freezer fridge, wall calendar, labour law board |
+| West wall | Two coffee machines, a kettle, two Rockhopper biscuit tins, a bottom-freezer fridge, wall calendar, labour law board |
 | Wing | Reference bookcases, records overflow, on-call board, the island's flag |
 | Storage 2301 | A 13 x 36 strip down the east side: racks, paper, e-waste, eleven dead laptops, a teaching skeleton in a paper crown, and a safe |
 | Lift lobby | A 64 ft corridor along the south side: a window at one end, the lift in a bay, two badge doors, a British food cart parked by the glass |

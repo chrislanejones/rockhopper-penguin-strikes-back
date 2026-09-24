@@ -4,8 +4,8 @@ import * as THREE from 'three'
 import { M, mat } from '../scene/materials'
 import { H, HALF, LX, RX0, TV_STAFF, TV_WEATHER, candela } from '../scene/constants'
 import {
-  dartboardTex, fridgeFlyerTex, pizzaBoxTex, pretzelBackTex, pretzelBoxTex,
-  pretzelSideTex, sodaFrontTex, squirrelPhotoTex,
+  biscuitTinLidTex, biscuitTinSideTex, dartboardTex, fridgeFlyerTex, pizzaBoxTex,
+  sodaFrontTex, squirrelPhotoTex,
 } from '../textures/signage'
 import { drawWeather, slides } from '../textures/screens'
 import { canvasTex } from '../lib/canvasTex'
@@ -274,98 +274,102 @@ function PingPongTable({ x, z }: { x: number; z: number }) {
   )
 }
 
+/** The four kinds of biscuit that end up out on the counter. */
+type BiscuitKind = 'digestive' | 'chocolate' | 'custard'
+
+/** What is out on the counter, in the order the four spots are laid. */
+const KINDS: BiscuitKind[] = ['digestive', 'chocolate', 'custard', 'digestive']
+
 /**
- * A hard sourdough pretzel: three torus loops, which is what a pretzel is.
- *
- * Lies flat at `y`, the local origin at the centre of the bottom loop. About
- * 0.3 ft across, which is a big pretzel, but it has to be big enough to click.
+ * One biscuit, lying flat at `y`. A digestive is a thick disc; the chocolate
+ * one has its coating on top; a custard cream is two oblong biscuits with the
+ * filling showing between. About 0.25 ft across, which is a big biscuit, but
+ * it has to be big enough to click.
  */
-function Pretzel({
+function Biscuit({
   x,
   y,
   z,
   ry,
-  material,
-  salt,
+  kind,
+  mats,
 }: {
   x: number
   y: number
   z: number
   ry: number
-  material: THREE.Material
-  salt: THREE.Material
+  kind: BiscuitKind
+  mats: { bake: THREE.Material; choc: THREE.Material; custard: THREE.Material; cream: THREE.Material }
 }) {
-  const grains = useMemo(
-    () =>
-      Array.from({ length: 9 }, () => {
-        const a = Math.random() * 7
-        const r = 0.05 + Math.random() * 0.1
-        return { x: Math.cos(a) * r, z: Math.sin(a) * r - 0.03, ry: Math.random() * 3 }
-      }),
-    [],
-  )
+  if (kind === 'custard') {
+    return (
+      <group position={[x, y, z]} rotation={[0, ry, 0]}>
+        {[0.012, 0.052].map((by) => (
+          <mesh key={by} position={[0, by, 0]} material={mats.custard} castShadow>
+            <boxGeometry args={[0.26, 0.024, 0.16]} />
+          </mesh>
+        ))}
+        <mesh position={[0, 0.032, 0]} material={mats.cream}>
+          <boxGeometry args={[0.22, 0.016, 0.13]} />
+        </mesh>
+      </group>
+    )
+  }
   return (
     <group position={[x, y, z]} rotation={[0, ry, 0]}>
-      <mesh rotation={[Math.PI / 2, 0, 0]} material={material} castShadow>
-        <torusGeometry args={[0.11, 0.028, 8, 20, Math.PI * 1.1]} />
+      <mesh position={[0, 0.013, 0]} material={mats.bake} castShadow>
+        <cylinderGeometry args={[0.13, 0.13, 0.026, 20]} />
       </mesh>
-      {[-1, 1].map((sx) => (
-        <mesh
-          key={sx}
-          position={[sx * 0.065, 0, -0.07]}
-          rotation={[Math.PI / 2, 0, 0]}
-          material={material}
-          castShadow
-        >
-          <torusGeometry args={[0.065, 0.028, 8, 18]} />
+      {kind === 'chocolate' && (
+        <mesh position={[0, 0.029, 0]} material={mats.choc}>
+          <cylinderGeometry args={[0.126, 0.126, 0.008, 20]} />
         </mesh>
-      ))}
-      {grains.map((g, i) => (
-        <mesh key={i} position={[g.x, 0.03, g.z]} rotation={[0, g.ry, 0]} material={salt}>
-          <boxGeometry args={[0.014, 0.01, 0.014]} />
-        </mesh>
-      ))}
+      )}
     </group>
   )
 }
 
 /**
- * Rockhopper Pretzels by the coffee maker — one open, one knocked over,
+ * Rockhopper biscuit tins by the coffee maker — one open, one knocked over,
  * and a handful out on the counter that you can take with you.
  *
- * The carton is six faces of three different textures rather than one texture
- * six times: a single map on a BoxGeometry puts the brand name on the top flap
- * and a mirror image of it on the back.
+ * A cylinder takes three materials: the printed band round the side, then the
+ * top cap, then the bottom. The open tin is two tubes, the band outside and a
+ * bare tin lining seen from within, so the print never shows through
+ * backwards.
  */
 function Snacks() {
-  const front = useMemo(
-    () => new THREE.MeshStandardMaterial({ map: pretzelBoxTex(), roughness: 0.65 }),
+  const band = useMemo(
+    () => new THREE.MeshStandardMaterial({ map: biscuitTinSideTex(), roughness: 0.35, metalness: 0.45 }),
     [],
   )
-  const back = useMemo(
-    () => new THREE.MeshStandardMaterial({ map: pretzelBackTex(), roughness: 0.7 }),
+  const lidTop = useMemo(
+    () => new THREE.MeshStandardMaterial({ map: biscuitTinLidTex(), roughness: 0.35, metalness: 0.45 }),
     [],
   )
-  const side = useMemo(
-    () => new THREE.MeshStandardMaterial({ map: pretzelSideTex(), roughness: 0.65 }),
+  const tinBare = useMemo(() => M(0xc9cdd2, { roughness: 0.3, metalness: 0.8 }), [])
+  const lining = useMemo(
+    () => M(0xb9bec4, { roughness: 0.35, metalness: 0.75, side: THREE.BackSide }),
     [],
   )
-  const board = useMemo(() => M(0x1c2d5a, { roughness: 0.75 }), [])
-  const kraft = useMemo(() => M(0xc2a678, { roughness: 0.9 }), [])
-  const liner = useMemo(() => M(0xe4dcc6, { roughness: 0.75 }), [])
-  // BoxGeometry face order is +x, -x, +y, -y, +z, -z.
-  const carton = useMemo(
-    () => [side, side, board, kraft, front, back],
-    [side, board, kraft, front, back],
-  )
+  const paper = useMemo(() => M(0xf4f0e6, { roughness: 0.9 }), [])
+  const closed = useMemo(() => [band, lidTop, tinBare], [band, lidTop, tinBare])
+  const lid = useMemo(() => [band, lidTop, tinBare], [band, lidTop, tinBare])
 
-  const pretzelMat = useMemo(() => M(0xa8631f, { roughness: 0.85 }), [])
-  const saltMat = useMemo(() => M(0xf2efe6, { roughness: 0.5 }), [])
-  const crumbMat = useMemo(() => M(0x8f5a22, { roughness: 1 }), [])
+  const biscuit = useMemo(
+    () => ({
+      bake: M(0xc58c46, { roughness: 0.9 }),
+      choc: M(0x4a2a17, { roughness: 0.6 }),
+      custard: M(0xe0b36a, { roughness: 0.85 }),
+      cream: M(0xf3e2b0, { roughness: 0.7 }),
+    }),
+    [],
+  )
+  const crumbMat = useMemo(() => M(0xb07a3a, { roughness: 1 }), [])
 
-  const W = 0.85
-  const HT = 1.35
-  const D = 0.4
+  const R = 0.42
+  const HT = 0.42
+  const LID = 0.07
 
   const crumbs = useMemo(
     () =>
@@ -387,43 +391,63 @@ function Snacks() {
       ].map(([x, z]) => ({ x, z, ry: Math.random() * 3 })),
     [],
   )
+  // what is left inside the open tin: a loose stack on the paper
+  const inside = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, i) => ({
+        x: Math.cos(i * 2.1) * 0.15 * (i % 3 === 0 ? 0 : 1),
+        z: Math.sin(i * 2.1) * 0.15 * (i % 3 === 0 ? 0 : 1),
+        y: 0.04 + Math.floor(i / 3) * 0.028,
+        ry: i * 0.9,
+        kind: KINDS[i % 3],
+      })),
+    [],
+  )
 
   return (
     <>
-      {/* the open one, stood against the splashback */}
-      <group position={[EX + 1.25, CTOP, BZ - 2.15]} rotation={[0, Math.PI / 2 + 0.26, 0]}>
-        <mesh position={[0, HT / 2, 0]} material={carton} castShadow receiveShadow>
-          <boxGeometry args={[W, HT, D]} />
+      {/* the open one, by the splashback, its lid leaning on the wall behind it */}
+      <group position={[EX + 1.25, CTOP, BZ - 2.1]}>
+        <mesh position={[0, HT / 2, 0]} material={band} castShadow receiveShadow>
+          <cylinderGeometry args={[R, R, HT, 40, 1, true]} />
         </mesh>
-        {/* top flap, folded back — hinged on the box so it stays with it */}
-        <group position={[0, HT, -D / 2]} rotation={[-0.55, 0, 0]}>
-          <mesh position={[0, 0.2, 0]} material={board}>
-            <boxGeometry args={[W, 0.4, 0.025]} />
-          </mesh>
-        </group>
-        {/* the waxed liner, showing just above the cut line */}
-        <mesh position={[0, HT + 0.02, 0]} material={liner}>
-          <boxGeometry args={[W - 0.2, 0.16, D - 0.14]} />
+        <mesh position={[0, HT / 2, 0]} material={lining}>
+          <cylinderGeometry args={[R - 0.004, R - 0.004, HT, 40, 1, true]} />
         </mesh>
-      </group>
-
-      {/* the one that went over, label up */}
-      <group position={[EX + 1.5, CTOP, BZ + 0.25]} rotation={[0, 0.5, 0]}>
+        <mesh position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]} material={tinBare}>
+          <circleGeometry args={[R - 0.005, 40]} />
+        </mesh>
+        {/* the fluted paper, and what is left on it */}
+        <mesh position={[0, 0.012, 0]} rotation={[-Math.PI / 2, 0, 0]} material={paper}>
+          <circleGeometry args={[R - 0.03, 24]} />
+        </mesh>
+        {inside.map((b, i) => (
+          <Biscuit key={i} x={b.x} y={b.y - 0.03} z={b.z} ry={b.ry} kind={b.kind} mats={biscuit} />
+        ))}
         <mesh
-          position={[0, D / 2, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          material={carton}
+          position={[-R - 0.05, R + 0.02, -0.2]}
+          rotation={[0, 0, Math.PI / 2 - 0.18]}
+          material={lid}
           castShadow
-          receiveShadow
         >
-          <boxGeometry args={[W, HT, D]} />
+          <cylinderGeometry args={[R + 0.012, R + 0.012, LID, 40]} />
         </mesh>
       </group>
 
-      {/* four pretzels out on the counter, and the salt they shed */}
+      {/* the one that went over and rolled, lid still on */}
+      <group position={[EX + 1.5, CTOP + R, BZ + 0.25]} rotation={[0, 0.5, 0]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]} material={closed} castShadow receiveShadow>
+          <cylinderGeometry args={[R, R, HT, 40]} />
+        </mesh>
+        <mesh position={[0, 0, HT / 2 - LID / 2 + 0.01]} rotation={[Math.PI / 2, 0, 0]} material={lid}>
+          <cylinderGeometry args={[R + 0.012, R + 0.012, LID, 40]} />
+        </mesh>
+      </group>
+
+      {/* four biscuits out on the counter, and the crumbs they shed */}
       {spilled.map((c, i) => (
-        <Pickable key={`p${i}`} label="pretzel">
-          <Pretzel x={c.x} y={CTOP + 0.03} z={c.z} ry={c.ry} material={pretzelMat} salt={saltMat} />
+        <Pickable key={`p${i}`} label="biscuit">
+          <Biscuit x={c.x} y={CTOP + 0.003} z={c.z} ry={c.ry} kind={KINDS[i]} mats={biscuit} />
         </Pickable>
       ))}
       {crumbs.map((c, i) => (
@@ -1224,6 +1248,73 @@ const CARAFE = [
 const BREW = CARAFE.slice(0, 7).map((v) => new THREE.Vector2(Math.max(0, v.x - 0.018), v.y))
 
 /**
+ * The kettle, on its power base at the south end of the counter.
+ *
+ * A London office runs on it: the coffee machine is for visitors. Brushed
+ * steel jug, spout out into the room, handle toward the wall, a blue water
+ * window down the side and the little light on the base that says it has
+ * just boiled.
+ */
+function Kettle({ x, y, z }: { x: number; y: number; z: number }) {
+  const steel = useMemo(() => M(0xc3c8ce, { roughness: 0.28, metalness: 0.85 }), [])
+  const black = useMemo(() => M(0x1b1d20, { roughness: 0.5 }), [])
+  const glass = useMemo(
+    () => M(0x6fa8d6, { roughness: 0.1, transparent: true, opacity: 0.7 }),
+    [],
+  )
+  const lamp = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: 0x0a2a4a, emissive: 0x3aa0ff, emissiveIntensity: 1.6 }),
+    [],
+  )
+
+  const BODY = 0.72
+
+  return (
+    <group position={[x, y, z]}>
+      {/* the power base */}
+      <mesh position={[0, 0.03, 0]} material={black} castShadow receiveShadow>
+        <cylinderGeometry args={[0.3, 0.32, 0.06, 28]} />
+      </mesh>
+      <mesh position={[0.26, 0.035, 0.12]} material={lamp}>
+        <boxGeometry args={[0.04, 0.02, 0.06]} />
+      </mesh>
+
+      {/* the jug, narrowing to the lid */}
+      <mesh position={[0, 0.06 + BODY / 2, 0]} material={steel} castShadow>
+        <cylinderGeometry args={[0.22, 0.27, BODY, 28]} />
+      </mesh>
+      <mesh position={[0, 0.06 + BODY + 0.03, 0]} material={black}>
+        <cylinderGeometry args={[0.16, 0.2, 0.06, 24]} />
+      </mesh>
+      <mesh position={[0, 0.06 + BODY + 0.08, 0]} material={black}>
+        <boxGeometry args={[0.14, 0.04, 0.05]} />
+      </mesh>
+
+      {/* the spout, out into the room */}
+      <mesh position={[0.25, 0.06 + BODY - 0.08, 0]} rotation={[0, 0, -0.9]} material={steel}>
+        <cylinderGeometry args={[0.035, 0.07, 0.2, 12]} />
+      </mesh>
+
+      {/* the handle, toward the wall, and the switch under it */}
+      <mesh position={[-0.32, 0.06 + BODY - 0.04, 0]} material={black}>
+        <boxGeometry args={[0.06, 0.06, 0.09]} />
+      </mesh>
+      <mesh position={[-0.38, 0.06 + BODY / 2, 0]} material={black} castShadow>
+        <boxGeometry args={[0.06, BODY - 0.1, 0.09]} />
+      </mesh>
+      <mesh position={[-0.32, 0.18, 0]} material={black}>
+        <boxGeometry args={[0.1, 0.06, 0.09]} />
+      </mesh>
+
+      {/* the water window, on the side you see from the room */}
+      <mesh position={[0.02, 0.06 + BODY * 0.45, 0.246]} rotation={[0.07, 0, 0]} material={glass}>
+        <boxGeometry args={[0.07, BODY * 0.6, 0.012]} />
+      </mesh>
+    </group>
+  )
+}
+
+/**
  * A drip coffee maker, and it works.
  *
  * Click the button and it brews: a stream out of the basket, the level in the
@@ -1634,6 +1725,7 @@ export function BreakArea() {
         </group>
       ))}
       <SugarCaddy x={EX + 1.2} z={BZ + 1.9} />
+      <Kettle x={EX + 1.25} z={BZ + 3.5} y={CTOP} />
 
       {/*
         The drinking fountain, on the west wall between the copier and the
