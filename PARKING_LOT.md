@@ -85,3 +85,32 @@ the diff.
 - **Space on him in person still gets the old three lines.** The conversation only runs through
   the watch. Running the same exchanges when she presses Space on him in the car is a small follow-up.
 
+
+## Island version (from the 09-24-2026 session)
+
+Main is now the Parliament of Inaccessible Island's London office; the
+Virginia version lives on the private `state-of-va` branch. The public repo is
+`rockhopper-penguin-strikes-back`, synced from main by `git archive`.
+
+- **Walk it in a real browser.** Nothing added this session has been seen
+  live: Chrome on the Windows side could not reach the WSL dev server. Check
+  the Walkie-Talkie from the window, the Gatekeeper in the lift lobby, the
+  1817 page on the B2 mezzanine (0.57 ft taller than the frame it replaced —
+  ceiling clearance), the Oliva and albatross mosaics, the loneliest-house
+  print in storage, the torn Happy Feet cover, the biscuit tins, the kettle,
+  the coffee notice, the 1961 stamp, the Queen Mary's Peak model, the family
+  annuals, and the rubber rail. Also check nothing floats where the ideas bin
+  and the Greenville poster were.
+- **Labor-law poster** is still a US federal-and-state poster in dollars
+  (OSHA, FMLA, USERRA). For London it wants redoing as a UK workplace poster.
+- **The British food cart** has its new plate but is still the Conestoga
+  wagon model.
+- **Drawn placeholders waiting for real images** (`src/textures/island.ts`):
+  the island and Parliament flags, the agency sign, the IITS banner.
+- **The wall calendar sits inside the splashback.** It is at x = RX0 + 0.03,
+  y 5.2, z 6.4, which is within the splashback box (x 0–0.4, y 5–7) over the
+  counter. Pre-existing; not touched.
+- **"Dept. of General Services"** on the soda machine's out-of-order strip is
+  also Virginia's agency name. Left in as generic.
+- **Bob and Clapp** were reported somewhere in the scene but are not in the
+  code, docs, images or either branch. Probably an old deploy; no URL yet.
