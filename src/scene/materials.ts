@@ -65,6 +65,105 @@ const panelTex = (base: number) => {
   return t
 }
 
+/**
+ * A sansevieria blade, painted down its own length: dark green, the pale
+ * margin running down both edges, and the pale grey-green barring across it
+ * that is the only reason anyone can tell the plant from a plastic one.
+ *
+ * U runs across the blade, V from soil to tip, so one texture dresses every
+ * blade in the building whatever shape it was grown into.
+ */
+const bladeTex = lazy(() =>
+  canvasTex(64, 256, (g, w, h) => {
+    g.fillStyle = '#2d5a31'
+    g.fillRect(0, 0, w, h)
+    // the barring: pale chevrons pointing up the blade, never quite level
+    for (let i = 0; i < 110; i++) {
+      const y = Math.random() * h
+      const len = h * (0.008 + Math.random() * 0.026)
+      g.fillStyle = `rgba(${(126 + Math.random() * 54) | 0},${(156 + Math.random() * 46) | 0},${(86 + Math.random() * 40) | 0},${(0.09 + Math.random() * 0.2).toFixed(3)})`
+      g.beginPath()
+      g.moveTo(0, y)
+      g.lineTo(w * 0.5, y - len * 0.9)
+      g.lineTo(w, y)
+      g.lineTo(w, y + len)
+      g.lineTo(w * 0.5, y + len * 0.25)
+      g.lineTo(0, y + len)
+      g.closePath()
+      g.fill()
+    }
+    // a darker spine up the middle, where the blade folds
+    const spine = g.createLinearGradient(0, 0, w, 0)
+    spine.addColorStop(0, 'rgba(24,52,28,0)')
+    spine.addColorStop(0.5, 'rgba(24,52,28,.34)')
+    spine.addColorStop(1, 'rgba(24,52,28,0)')
+    g.fillStyle = spine
+    g.fillRect(0, 0, w, h)
+    // the margin: pale yellow-green, hard on the outside, blended inward
+    for (const flip of [false, true]) {
+      g.save()
+      if (flip) {
+        g.translate(w, 0)
+        g.scale(-1, 1)
+      }
+      const edge = g.createLinearGradient(0, 0, w * 0.13, 0)
+      edge.addColorStop(0, '#c2c968')
+      edge.addColorStop(0.45, 'rgba(178,190,98,.85)')
+      edge.addColorStop(1, 'rgba(160,178,92,0)')
+      g.fillStyle = edge
+      g.fillRect(0, 0, w * 0.13, h)
+      g.restore()
+    }
+    // the tip browns off, the way it does against a window
+    const tip = g.createLinearGradient(0, 0, 0, h * 0.1)
+    tip.addColorStop(0, 'rgba(120,96,52,.5)')
+    tip.addColorStop(1, 'rgba(120,96,52,0)')
+    g.fillStyle = tip
+    g.fillRect(0, 0, w, h * 0.1)
+  }),
+)
+
+/** Thrown terracotta: clay grit, the rings the wheel left, and a salt bloom. */
+const terracottaTex = lazy(() =>
+  canvasTex(128, 128, (g, w, h) => {
+    g.fillStyle = '#ab5e39'
+    g.fillRect(0, 0, w, h)
+    for (let i = 0; i < 2800; i++) {
+      const v = 0.8 + Math.random() * 0.42
+      g.fillStyle = `rgba(${(171 * v) | 0},${(94 * v) | 0},${(57 * v) | 0},.5)`
+      g.fillRect(Math.random() * w, Math.random() * h, 2, 2)
+    }
+    for (let y = 0; y < h; y += 3 + Math.random() * 6) {
+      g.strokeStyle = Math.random() < 0.5 ? 'rgba(88,46,26,.13)' : 'rgba(206,128,86,.13)'
+      g.lineWidth = 1
+      g.beginPath()
+      g.moveTo(0, y)
+      g.lineTo(w, y)
+      g.stroke()
+    }
+    for (let i = 0; i < 24; i++) {
+      g.fillStyle = `rgba(216,201,180,${(0.03 + Math.random() * 0.07).toFixed(3)})`
+      g.beginPath()
+      g.arc(Math.random() * w, Math.random() * h, 5 + Math.random() * 19, 0, Math.PI * 2)
+      g.fill()
+    }
+  }),
+)
+
+/** Potting compost, with the grit and bark that comes in the bag. */
+const soilTex = lazy(() =>
+  canvasTex(64, 64, (g, w, h) => {
+    g.fillStyle = '#382a1d'
+    g.fillRect(0, 0, w, h)
+    for (let i = 0; i < 2400; i++) {
+      const v = 0.55 + Math.random() * 1.05
+      g.fillStyle = `rgba(${(56 * v) | 0},${(42 * v) | 0},${(29 * v) | 0},.8)`
+      const s = 1 + Math.random() * 2.2
+      g.fillRect(Math.random() * w, Math.random() * h, s, s)
+    }
+  }),
+)
+
 /** Flecked commercial loop carpet, tiled across the whole floor plate. */
 const carpetTex = lazy(() =>
   canvasTex(
@@ -143,11 +242,17 @@ export const mat = {
   get screenOff() {
     return cache('screenOff', () => M(0x0c0e12, { roughness: 0.2 }))
   },
+  /** A sansevieria blade. Double-sided — a leaf has no back. */
   get leaf() {
-    return cache('leaf', () => M(0x3f7a3b, { roughness: 0.9 }))
+    return cache('leaf', () =>
+      M(0xffffff, { map: bladeTex(), roughness: 0.58, side: THREE.DoubleSide }),
+    )
   },
   get pot() {
-    return cache('pot', () => M(0xb0623c))
+    return cache('pot', () => M(0xffffff, { map: terracottaTex(), roughness: 0.82 }))
+  },
+  get soil() {
+    return cache('soil', () => M(0xffffff, { map: soilTex(), roughness: 1 }))
   },
   get glass() {
     return cache(

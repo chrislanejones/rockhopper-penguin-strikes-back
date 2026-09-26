@@ -1,8 +1,9 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { M, mat } from '../../scene/materials'
-import { canvasTex } from '../../lib/canvasTex'
+import { canvasTex, lazy } from '../../lib/canvasTex'
 import { keyboardTex, screenTexture, type ScreenSpec } from '../../textures/screens'
 import { plaqueTex } from '../../textures/signage'
 import { Box, BoxCollider, Panel } from './primitives'
@@ -151,27 +152,137 @@ export function Keyboard({ x, z }: { x: number; z: number }) {
   )
 }
 
-/** Potted plant. Seven cones and an optimist. */
+/** The pot: thrown terracotta, a foot, a swell, and a rolled rim. */
+const POT = [
+  [0.0, 0.0],
+  [0.132, 0.0],
+  [0.142, 0.014],
+  [0.158, 0.06],
+  [0.188, 0.2],
+  [0.206, 0.3],
+  [0.214, 0.336],
+  [0.224, 0.352],
+  [0.216, 0.366],
+  [0.198, 0.358],
+  [0.192, 0.33],
+  [0.188, 0.28],
+].map(([r, y]) => new THREE.Vector2(r, y))
+
+/**
+ * Compost, crowned the way it sits when nobody has topped the pot up. Its rim
+ * is set wide enough to bite into the inside of the pot: the pot is a shell
+ * with no back faces, so any gap here is a hole straight through to the carpet.
+ *
+ * Run rim-first, inward and up: a lathe takes its winding from the order of
+ * the profile, and the other way round the crown faces down into the pot and
+ * culls away to nothing.
+ */
+const SOIL = [
+  [0.194, 0.0],
+  [0.176, 0.008],
+  [0.13, 0.026],
+  [0.07, 0.038],
+  [0.0, 0.042],
+].map(([r, y]) => new THREE.Vector2(r, y))
+
+const BLADE_SEGS = 9
+
+/** Half-width along a blade: narrow at the soil, widest at a third, a point at the tip. */
+const bladeWidth = (t: number) =>
+  Math.max(
+    0.06,
+    Math.pow(Math.min(1, t / 0.28), 0.55) * Math.pow(Math.min(1, (1 - t) / 0.5), 0.75),
+  )
+
+/**
+ * One blade: a tapered ribbon that rises, arcs away from the clump, and twists
+ * about its own length, so no two edges catch the ceiling light the same way.
+ * Built in radial/tangential terms and then swung round to `az`.
+ */
+function bladeGeometry(
+  h: number,
+  w: number,
+  lean: number,
+  twist: number,
+  curl: number,
+  az: number,
+  r0: number,
+) {
+  const pos: number[] = []
+  const uv: number[] = []
+  const idx: number[] = []
+  const ca = Math.cos(az)
+  const sa = Math.sin(az)
+  for (let i = 0; i <= BLADE_SEGS; i++) {
+    const t = i / BLADE_SEGS
+    const half = w * bladeWidth(t)
+    const rad = r0 + lean * t * t + curl * t ** 5
+    const y = h * t * (1 - 0.1 * t * t) - curl * 0.6 * t ** 5
+    const tw = twist * t
+    const wx = Math.sin(tw) * half
+    const wz = Math.cos(tw) * half
+    for (const sgn of [-1, 1]) {
+      const rx = rad + sgn * wx
+      const rz = sgn * wz
+      pos.push(rx * ca - rz * sa, y, rx * sa + rz * ca)
+      uv.push(sgn < 0 ? 0 : 1, t)
+    }
+  }
+  for (let i = 0; i < BLADE_SEGS; i++) {
+    const a = i * 2
+    idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3)
+  }
+  const g = new THREE.BufferGeometry()
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3))
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2))
+  g.setIndex(idx)
+  g.computeVertexNormals()
+  return g
+}
+
+/**
+ * A whole clump, merged down to one geometry — a plant costs three draw calls
+ * however many blades it grows. The generator is seeded, so the same plant
+ * comes back every load rather than reshuffling itself on a refresh.
+ */
+function clumpGeometry(seed: number) {
+  let s = seed * 9301 + 49297
+  const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280
+
+  const n = 9 + Math.floor(rnd() * 4)
+  const blades = Array.from({ length: n }, (_, i) =>
+    bladeGeometry(
+      0.45 + rnd() * 0.3,
+      0.055 + rnd() * 0.02,
+      0.1 + rnd() * 0.2,
+      (rnd() < 0.5 ? -1 : 1) * (0.25 + rnd() * 0.5),
+      rnd() < 0.25 ? 0.06 + rnd() * 0.1 : 0,
+      (i / n) * Math.PI * 2 + rnd() * 0.5,
+      0.02 + rnd() * 0.05,
+    ),
+  )
+  return mergeGeometries(blades)!
+}
+
+const potGeo = lazy(() => new THREE.LatheGeometry(POT, 16))
+const soilGeo = lazy(() => new THREE.LatheGeometry(SOIL, 14))
+const clumps = lazy(() => [1, 2, 3].map(clumpGeometry))
+
+/**
+ * Potted sansevieria — the plant every office settles on, because it survives
+ * a fortnight of nobody watering it over Christmas.
+ *
+ * Three clumps, picked off the position, so a row of them down a corridor does
+ * not read as one plant stamped five times.
+ */
 export function Plant({ x, z, s = 1 }: { x: number; z: number; s?: number }) {
+  const clump = clumps()[Math.abs(Math.round(x * 7.3 + z * 3.1)) % 3]
   return (
-    <>
-      <mesh position={[x, 0.175 * s, z]} material={mat.pot}>
-        <cylinderGeometry args={[0.22 * s, 0.17 * s, 0.35 * s, 12]} />
-      </mesh>
-      {Array.from({ length: 7 }, (_, i) => {
-        const a = i * 0.9
-        return (
-          <mesh
-            key={i}
-            position={[x + Math.cos(a) * 0.12 * s, 0.55 * s, z + Math.sin(a) * 0.12 * s]}
-            rotation={[Math.cos(a) * 0.55, 0, -Math.sin(a) * 0.55]}
-            material={mat.leaf}
-          >
-            <coneGeometry args={[0.09 * s, 0.7 * s, 6]} />
-          </mesh>
-        )
-      })}
-    </>
+    <group position={[x, 0, z]} scale={s}>
+      <mesh geometry={potGeo()} material={mat.pot} />
+      <mesh geometry={soilGeo()} position={[0, 0.302, 0]} material={mat.soil} />
+      <mesh geometry={clump} position={[0, 0.328, 0]} material={mat.leaf} />
+    </group>
   )
 }
 
